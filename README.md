@@ -23,9 +23,9 @@ First I'd like to introduce the Wardrop's Principle, i.e., the definition of use
 > A stable condition is reached only when no traveler can improve his travel time by unilaterally changing routes. This is the characterization of the user-equilibrium (UE) condition.
 
 This program is aimed to obtain the user-equilibrium solution of given traffic demand and road network.  The mathematical model is demonstrated as follows:
-$$
+\\(
 \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
-$$
+\\)
 subject to:
 $$
 \sum_k f^{rs}_k = q_{rs}  \  \  \forall r,s
