@@ -96,14 +96,14 @@ $$
 
 In the file *create_template.py*, there is a good example. The graph is as follows:
 
-![NETWORK](/home/andrea/Pictures/NETWORK.png)
+![image](https://github.com/AndreaLI95/User-Equilibrium-Solution/raw/master/image_folder/NETWORK.png)
 
 The basic data of this network is given as a table:
 
-![DATA_OF_NETWORK](/home/andrea/Pictures/DATA_OF_NETWORK.png)
+![image](https://github.com/AndreaLI95/User-Equilibrium-Solution/raw/master/image_folder/DATA_OF_NETWORK.png)
 
 We are also supposed to tell the program the information of demand:
 
-![DEMAND](/home/andrea/Pictures/DEMAND.png)
+![image](https://github.com/AndreaLI95/User-Equilibrium-Solution/raw/master/image_folder/DEMAND.png)
 
 Then, we can follow the instructions and run the program, then yield the output we expect.
