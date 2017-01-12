@@ -50,9 +50,11 @@ $$
 Where x_a is the flow on link a, f_k is the flow on path k connecting origin r with destination s, and delta is the Link-Path Incidence Matrix. 
 
 the function t is the performance function, which indicates the relationship between flows (traffic volume) and  travel time on the same link. According to the suggestion from the Federal Highway Administration (FHWA), we could use the following function:
+
 $$
 t(x) = t_0(1+\alpha{({\frac x c})^\beta})
 $$
+
 Where x is the link flow, c is the capacity, t_0 is the free flow travel time. As usual, we can set the alpha as 0.15 and the beta as 4.
 
 We can notice that the objective function is physically meaningless, but it was proved that the optimal solution of  this program problem exactly is the user-equilibrium solution. If you're interested, please read the book Urban *Transportation Networks: Equilibrium Analysis with Mathematical Models* by Yosef Sheffi, Professor at Massachusetts Institute of Technology. 
@@ -62,22 +64,29 @@ Meanwhile, this program is a convex program, we can use Frank-Wolfe Algorithm to
 **Step 0: Initialization.** Perform the all-or-nothing assignment based on the zero link flow. This yields x^n_a.
 
 **Step 1: Update.** Set:
+
 $$
 t^n_a = t_a(x^n_a) \ \ \forall a
 $$
+
 **Step 2: Direction finding.** Perform the all-or-nothing assignment based on the t^n_a. This yields a set of auxiliary link flows y^n_a.
 
 **Step 3: Line search.** Find theta that solves:
+
 $$
 \min_{0 \le \theta \le 1} \sum_a \int^{x^n_a+\theta(y^n_a-x^n_a)}_0 t_a(\omega) d\omega
 $$
+
 further, we can use the dichotomy method to solve it, because it is a convex function.
 
 let:
+
 $$
 f(\theta) = \sum_a \int^{x^n_a+\theta(y^n_a-x^n_a)}_0 t_a(\omega) d\omega
 $$
+
 thus:
+
 $$
 f'(\theta) = \sum_a  t_a(x^n_a+\theta(y^n_a-x^n_a)) (y^n_a-x^n_a)
 $$
@@ -87,20 +96,22 @@ f''(\theta) = \sum_a  t'_a(x^n_a+\theta(y^n_a-x^n_a)) (y^n_a-x^n_a)^2
 $$
 
 Because the function t is strictly increasing, so we can know:
+
 $$
 f''(\theta) \ge 0
 $$
 
 **Step 4: Move.** Set:
+
 $$
 x^{n+1}_a = x^n_a+\theta(y^n_a-x^n_a)
 $$
 
 **Step 5: Convergence test.** If a convergence criterion is met, stop, the current solution  is the set of equilibrium link flows; otherwise, go to step 1. In my program, the convergence test is as follows:
+
 $$
 \frac {\| x^{n+1}-x^n \|} {\|x^n\|} \le \epsilon
 $$
-
 
 **PART III EXAMPLES**
 
