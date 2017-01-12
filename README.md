@@ -25,11 +25,7 @@ First I'd like to introduce the Wardrop's Principle, i.e., the definition of use
 
 This program is aimed to obtain the user-equilibrium solution of given traffic demand and road network.  The mathematical model is demonstrated as follows:
 
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default">
-$$
-\min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
-$$
-</script>
+<img src="http://www.forkosh.com/mathtex.cgi? \Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}">
 
 $$
 \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
