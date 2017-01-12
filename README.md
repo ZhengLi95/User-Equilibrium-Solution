@@ -1,3 +1,4 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 **USER-EQUILIBRIUM-SOLUTION**
 
@@ -25,6 +26,12 @@ First I'd like to introduce the Wardrop's Principle, i.e., the definition of use
 This program is aimed to obtain the user-equilibrium solution of given traffic demand and road network.  The mathematical model is demonstrated as follows:
 
 <img src="http://chart.googleapis.com/chart?cht=tx&chl= \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega" style="border:none;">
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default">
+$$
+\min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
+$$
+</script>
 
 $$
 \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
@@ -101,13 +108,13 @@ $$
 
 In the file *create_template.py*, there is a good example. The graph is as follows:
 
-![image](https://github.com/AndreaLI95/User-Equilibrium-Solution/blob/master/images_folder/NETWORK.png)
+![](images_folder/NETWORK.png)
 
 The basic data of this network is given as a table:
 
-![](https://github.com/AndreaLI95/User-Equilibrium-Solution/blob/master/images_folder/DATA_OF_NETWORK.png)
+![](images_folder/DATA_OF_NETWORK.png)
 
-We are also supposed to tell the program the information of demand:
+We are also supposed to input the information of demand into the program:
 
 ![](images_folder/DEMAND.png)
 
