@@ -116,7 +116,7 @@ def PrintAnswers2XLS(file_location, link_flow, link_time, path_time, vc_ratio, t
 
     for i in range(LP_matrix.shape[0]):
         for j in range(LP_matrix.shape[1]):
-            graph_sheet.write(i+1, j+1, LP_matrix[i,j])
+            graph_sheet.write(i+1, j+1, int(LP_matrix[i,j]))
 
 
     workbook.save(file_location)
