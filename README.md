@@ -1,4 +1,4 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
 **USER-EQUILIBRIUM-SOLUTION**
 
 
@@ -23,9 +23,12 @@ First I'd like to introduce the Wardrop's Principle, i.e., the definition of use
 > A stable condition is reached only when no traveler can improve his travel time by unilaterally changing routes. This is the characterization of the user-equilibrium (UE) condition.
 
 This program is aimed to obtain the user-equilibrium solution of given traffic demand and road network.  The mathematical model is demonstrated as follows:
-\\(
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl= \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega" style="border:none;">
+
+$$
 \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
-\\)
+$$
 subject to:
 $$
 \sum_k f^{rs}_k = q_{rs}  \  \  \forall r,s
@@ -82,10 +85,12 @@ Because the function t is strictly increasing, so we can know:
 $$
 f''(\theta) \ge 0
 $$
+
 **Step 4: Move.** Set:
 $$
 x^{n+1}_a = x^n_a+\theta(y^n_a-x^n_a)
 $$
+
 **Step 5: Convergence test.** If a convergence criterion is met, stop, the current solution  is the set of equilibrium link flows; otherwise, go to step 1. In my program, the convergence test is as follows:
 $$
 \frac {\| x^{n+1}-x^n \|} {\|x^n\|} \le \epsilon
