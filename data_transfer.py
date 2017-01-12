@@ -95,9 +95,9 @@ def PrintAnswers2XLS(file_location, link_flow, link_time, path_time, vc_ratio, t
     for i in range(len(title2)):
         flow_sheet.write(0, i + width1, title2[i])
 
-    for row in range(1, len(path_time)+1):
+    for row in range(1, path_time.shape[0] + 1):
         flow_sheet.write(row, 0 + width1, row)
-        flow_sheet.write(row, 1 + width1, round(path_time[row-1], 3))
+        flow_sheet.write(row, 1 + width1, round(path_time[row-1,0], 3))
 
     title3 = ['Total Travel Time']
 
