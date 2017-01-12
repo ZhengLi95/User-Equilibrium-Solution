@@ -1,4 +1,4 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 **USER-EQUILIBRIUM-SOLUTION**
 
@@ -25,9 +25,7 @@ First I'd like to introduce the Wardrop's Principle, i.e., the definition of use
 
 This program is aimed to obtain the user-equilibrium solution of given traffic demand and road network.  The mathematical model is demonstrated as follows:
 
-<img src="http://chart.googleapis.com/chart?cht=tx&chl= \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega" style="border:none;">
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default">
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default">
 $$
 \min z(x) = \sum_a \int_0^{x_a} t_a(\omega) d\omega
 $$
