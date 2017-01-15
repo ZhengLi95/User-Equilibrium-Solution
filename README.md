@@ -2,12 +2,12 @@
 
 **USER-EQUILIBRIUM-SOLUTION**
 
-
+Note: the mathematical formulars cannot be displayed correctly in the browser. Please download all the project and then read it on the markdown app which is friendly to the TeX mathematical formular.
 
 **PART I INSTRUCTIONS**
 
 1. Use the *create_template.py* to build a template Excel file. Before running it, you're supposed to revise the file location to where you want to save it. Remember that all the data will be read from this template later.
-2. Fill in your own data into the template. Please follow the given format, or the program may not function well.  Moreover, the road network can NOT contain a loop. (Now there is no code to detect if  there exists a loop in the network graph, but I hope that I could add it soon)
+2. Fill in the template with your own data. Please follow the given format, or the program may not function well.  Moreover, the road network can NOT contain a loop. (Now there is no code to detect if  there exists a loop in the network graph, but I hope that I could add it soon)
 3. Revise the data file (the template) location and accuracy parameters in the *main.py* as your prefer. However, do NOT let the accuracy of convex program's solution too small, or the Franke-Wolfe Algorithm can not converge.
 4. Run the *main.py*, then analyze the output.
 
