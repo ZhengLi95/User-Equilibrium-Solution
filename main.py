@@ -7,7 +7,7 @@ import functions as fs
 # You can revise the accuracy and the location of the data file as prefer
 
 # The accuracy of the linear program solution
-lp_accuracy = 1e-8
+lp_accuracy = 1e-4
 
 # The accuracy of the solution
 cp_accuracy = 1e-8
@@ -46,11 +46,10 @@ while True:
     auxiliary_link_flow = fs.AllOrNothingAssign(link_flow, LP_matrix, paths_grouped, demands, alpha, beta, t0, capacity)
 
     # Step 3: Linear Search
-    opt_theta = fs.Dichotomy(link_flow, auxiliary_link_flow, alpha, beta, t0, capacity, lp_accuracy, NL_matrix)
+    opt_theta = fs.GoldenSectionMethod(link_flow, auxiliary_link_flow, alpha, beta, t0, capacity, lp_accuracy, NL_matrix)
 
     # Step 4: Using optimal theta to update the link flow matrix
     new_link_flow = (1-opt_theta)*link_flow + opt_theta*auxiliary_link_flow
-
 
     # Step 5: Check the Convergence, if FALSE, then return to Step 1
     if fs.CheckConvergence(link_flow, new_link_flow, cp_accuracy):

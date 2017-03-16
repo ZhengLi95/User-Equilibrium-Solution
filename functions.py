@@ -143,6 +143,37 @@ def Obj_Value(flow, alpha, beta, t0, capacity, NL_matrix):
 
     return val
 
+def GoldenSectionMethod(link_flow, auxiliary_link_flow, alpha, beta, t0, capacity, lp_accuracy, NL_matrix):
+
+    LB = 0
+    UB = 1
+    goldenPoint = 0.618
+
+    leftX = LB + (1 - goldenPoint) * (UB - LB)
+    rightX = LB + goldenPoint * (UB - LB)
+
+    while True:
+
+        val_left = Obj_Value((1 - leftX) * link_flow + leftX * auxiliary_link_flow, alpha, beta, t0, capacity, NL_matrix)
+        val_right = Obj_Value((1 - rightX) * link_flow + rightX * auxiliary_link_flow, alpha, beta, t0, capacity, NL_matrix)
+
+        if val_left <= val_right:
+            UB = rightX
+        else:
+            LB = leftX
+
+        if abs(LB - UB) < lp_accuracy:
+            opt_theta = (rightX + leftX)/2.0
+            return opt_theta
+        else:
+            if val_left <= val_right:
+                rightX = leftX
+                leftX = LB + (1 - goldenPoint) * (UB - LB)
+            else:
+                leftX = rightX
+                rightX = LB + goldenPoint*(UB - LB)
+
+
 def Dichotomy(link_flow, auxiliary_link_flow, alpha, beta, t0, capacity, lp_accuracy, NL_matrix):
 
     LB = 0.
