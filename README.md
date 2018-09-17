@@ -1,3 +1,7 @@
+# NOTICE
+
+THIS REPOSITORY WILL BE REWRITTEN SOON X)
+
 # USER-EQUILIBRIUM-SOLUTION #
 
 User equilibrium is a classical problem on the traffic flow distribution in the field of Trasportation Engineering, its main idea is: Every driver cannot reduce his travel time by unilaterally change his travel route. My professor mentioned that this is also derived from the [Nash Equilibrium](https://en.wikipedia.org/wiki/Nash_equilibrium), but I am sorry that at this time I know nothing about Game Theory.
