@@ -3,30 +3,38 @@ A simple Python graph class, demonstrating the essential
 facts and functionalities of directed graphs, and it is
 designed for our traffic flow assignment problem, thus we
 have the following assumptions:
-1. The graph contains no loop, that is, an edge that 
+1. The graph contains no self-loop, that is, an edge that 
 connects a vertex to itself
 2. There is at most one edge which connects two vertice
 Revised from: https://www.python-course.eu/graphs_python.php
+and in our case we must give order to all the edges, thus we
+do not use the unordered data structure.
 """
 
 
 class Graph(object):
 
     def __init__(self, graph_dict= None):
-        """ initializes a graph object 
-            If no dictionary or None is given, 
-            an empty dictionary will be used
+        """ initializes a directed graph object by a dictionary,
+            If no dictionary or None is given, an empty dictionary 
+            will be used. Notice that this initial graph cannot
+            contain a self-loop.
         """
+        from collections import OrderedDict
         if graph_dict == None:
-            graph_dict = {}
-        self.__graph_dict = graph_dict
+            graph_dict = OrderedDict()
+        self.__graph_dict = OrderedDict(graph_dict)
+        if self.__is_with_loop():
+            raise ValueError("The graph are supposed to be without self-loop please recheck the input data!")
 
     def vertices(self):
-        """ returns the vertices of a graph """
+        """ returns the vertices of a graph
+        """
         return list(self.__graph_dict.keys())
 
     def edges(self):
-        """ returns the edges of a graph """
+        """ returns the edges of a graph
+        """
         return self.__generate_edges()
 
     def add_vertex(self, vertex):
@@ -37,17 +45,66 @@ class Graph(object):
         """
         if vertex not in self.__graph_dict:
             self.__graph_dict[vertex] = []
+        else:
+            print("The vertex %s already exists in the graph, thus it has been ignored!" % vertex)
 
     def add_edge(self, edge):
-        """ assumes that edge is of type set, tuple or list; 
-            between two vertices can be multiple edges! 
+        """ Assume that edge is ordered, and between two 
+            vertices there could exists only one edge. 
         """
-        edge = set(edge)
-        (vertex1, vertex2) = tuple(edge)
-        if vertex1 in self.__graph_dict:
-            self.__graph_dict[vertex1].append(vertex2)
+        vertex1, vertex2 = self.__decompose_edge(edge)
+        if not self.__is_edge_in_graph(edge):
+            if vertex1 in self.__graph_dict:
+                self.__graph_dict[vertex1].append(vertex2)
+            else:
+                self.__graph_dict[vertex1] = [vertex2]
         else:
-            self.__graph_dict[vertex1] = [vertex2]
+            print("The edge %s already exists in the graph, thus it has been ignored!" % ([vertex1, vertex2]))
+
+    def find_all_paths(self, start_vertex, end_vertex, path= []):
+        """ find all simple paths (path with no repeated vertices)
+            from start vertex to end vertex in graph 
+        """
+        path = path + [start_vertex]
+        if start_vertex == end_vertex:
+            return [path]
+        paths = []
+        for neighbor in self.__graph_dict[start_vertex]:
+            if neighbor not in path:
+                sub_paths = self.find_all_paths(neighbor, end_vertex, path)
+                for sub_path in sub_paths:
+                    paths.append(sub_path)
+        return paths
+
+    def __is_edge_in_graph(self, edge):
+        """ Judge if an edge is already in the graph
+        """
+        vertex1, vertex2 = self.__decompose_edge(edge)
+        if vertex1 in self.__graph_dict:
+            if vertex2 in self.__graph_dict[vertex1]:
+                return True
+            else:
+                return False
+        else:
+            return False
+    
+    def __decompose_edge(self, edge):
+        """ Input is a list or a tuple with only two elements
+        """
+        if (isinstance(edge, list) or isinstance(edge, tuple)) and len(edge) == 2:
+            return edge[0], edge[1]
+        else:
+            raise ValueError("%s is not of type list or tuple or its length does not equal to 2" % edge)
+
+    def __is_with_loop(self):
+        """ If the graph contains a self-loop, that is, an 
+            edge connects a vertex to itself, then return
+            True, otherwise return False
+        """
+        for vertex in self.__graph_dict:
+            if vertex in self.__graph_dict[vertex]:
+                return True
+        return False
 
     def __generate_edges(self):
         """ A static method generating the edges of the 
@@ -57,9 +114,8 @@ class Graph(object):
         """
         edges = []
         for vertex in self.__graph_dict:
-            for neighbour in self.__graph_dict[vertex]:
-                if {neighbour, vertex} not in edges:
-                    edges.append({vertex, neighbour})
+            for neighbor in self.__graph_dict[vertex]:
+                edges.append([vertex, neighbor])
         return edges
 
     def __str__(self):
@@ -73,14 +129,14 @@ class Graph(object):
 
 if __name__ == "__main__":
 
-    g = { "a" : ["d"],
-          "b" : ["c"],
-          "c" : ["b", "c", "d", "e"],
-          "d" : ["a", "c"],
-          "e" : ["c"],
-          "f" : []
-        }
-
+    g = {
+        "a" : ["b", "d"],
+        "b" : ["f", "c"],
+        "c" : ["b", "d"],
+        "d" : ["e"],
+        "e" : ["f", "c"],
+        "f" : []
+    }
 
     graph = Graph(g)
 
@@ -90,24 +146,10 @@ if __name__ == "__main__":
     print("Edges of graph:")
     print(graph.edges())
 
-    print("Add vertex:")
-    graph.add_vertex("z")
+    print('The path from vertex "a" to vertex "c":')
+    path = graph.find_all_paths("a", "c")
+    print(path)
 
-    print("Vertices of graph:")
-    print(graph.vertices())
- 
-    print("Add an edge:")
-    graph.add_edge({"a","z"})
-    
-    print("Vertices of graph:")
-    print(graph.vertices())
-
-    print("Edges of graph:")
-    print(graph.edges())
-
-    print('Adding an edge {"x","y"} with new vertices:')
-    graph.add_edge({"x","y"})
-    print("Vertices of graph:")
-    print(graph.vertices())
-    print("Edges of graph:")
-    print(graph.edges())
+    print('The path from vertex "a" to vertex "f":')
+    path = graph.find_all_paths("a", "f")
+    print(path)
