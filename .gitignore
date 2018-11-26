@@ -1,3 +1,10 @@
+.vscode/.ropeproject/config.py
+__pycache__/data.cpython-35.pyc
+__pycache__/data_transfer.cpython-35.pyc
+__pycache__/functions.cpython-35.pyc
+__pycache__/graph.cpython-35.pyc
+__pycache__/model.cpython-35.pyc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
