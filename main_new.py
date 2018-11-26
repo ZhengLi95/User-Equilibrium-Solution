@@ -1,9 +1,12 @@
-from model import TrafficFlowMod
+from model import TrafficFlowModel
 import data as dt
 
-mod = TrafficFlowMod(dt.graph, dt.O, dt.D, dt.demand, dt.free_time, dt.capacity)
+mod = TrafficFlowModel(dt.graph, dt.O, dt.D, dt.demand, dt.free_time, dt.capacity)
 
-ret = mod.solve()
+mod.disp_detail()
 
-print(ret[0])
-print(ret[1])
+mod.set_disp_precision(4)
+
+mod.solve()
+
+mod.report()

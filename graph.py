@@ -1,11 +1,15 @@
 """ DIRECTED GRAPH CLASS
+
 A simple Python graph class, demonstrating the essential 
 facts and functionalities of directed graphs, and it is
 designed for our traffic flow assignment problem, thus we
 have the following assumptions:
+
 1. The graph contains no self-loop, that is, an edge that 
-connects a vertex to itself
-2. There is at most one edge which connects two vertice
+connects a vertex to itself;
+
+2. There is at most one edge which connects two vertice;
+
 Revised from: https://www.python-course.eu/graphs_python.php
 and in our case we must give order to all the edges, thus we
 do not use the unordered data structure.
@@ -211,7 +215,7 @@ class TrafficNet(Graph):
         import numpy as np
         n_links = self.num_of_links()
         n_paths = self.num_of_paths()
-        lp_mat = np.zeros(shape= (n_links, n_paths))
+        lp_mat = np.zeros(shape= (n_links, n_paths), dtype= int)
         path_index = 0
         for path in self.__paths:
             for i in range(len(path) - 1):
