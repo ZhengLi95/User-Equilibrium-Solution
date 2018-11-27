@@ -139,7 +139,7 @@ class TrafficNetwork(Graph):
         after the initialization.
     '''
 
-    def __init__(self, graph= None, O= None, D= None):
+    def __init__(self, graph= None, O= [], D= []):
         Graph.__init__(self, graph)
         self.__origins = O
         self.__destinations = D
@@ -179,12 +179,13 @@ class TrafficNetwork(Graph):
         """ Calculate or re-calculate the links, paths and
             Link-Path incidence matrix
         """
-        # OD pairs = Origin-Destination Pairs
-        self.__OD_pairs = self.__generate_OD_pairs()
-        self.__links = self.edges()
-        self.__paths, self.__paths_category = self.__generate_paths_by_demands()
-        # LP Matrix = Link-Path Incidence Matrix
-        self.__LP_matrix = self.__generate_LP_matrix()
+        if self.__origins != None and self.__destinations != None:
+            # OD pairs = Origin-Destination Pairs
+            self.__OD_pairs = self.__generate_OD_pairs()
+            self.__links = self.edges()
+            self.__paths, self.__paths_category = self.__generate_paths_by_demands()
+            # LP Matrix = Link-Path Incidence Matrix
+            self.__LP_matrix = self.__generate_LP_matrix()
     
     def __generate_OD_pairs(self):
         ''' Generate the OD pairs (Origin-Destination Pairs)

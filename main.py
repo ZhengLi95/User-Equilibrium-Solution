@@ -1,9 +1,17 @@
 from model import TrafficFlowModel
 import data as dt
 
-# Initialize the model by input data
+# Initialize the model by data
+# Method 1: Direct initialization
 mod = TrafficFlowModel(dt.graph, dt.origins, dt.destinations, 
 dt.demand, dt.free_time, dt.capacity)
+# Method 2: By Excel interface
+mod = TrafficFlowModel()
+mod.create_template()
+mod.read_data()
+
+# Change the accuracy of solution if necessary
+mod._conv_accuracy = 1e-6
 
 # Display all the numerical details of
 # each variable during the iteritions

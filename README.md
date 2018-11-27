@@ -4,21 +4,31 @@ User equilibrium is a classical problem on the traffic flow assignment in the fi
 
 ## THEORY
 
-Please read [User-Equilibrium-Solution.pdf](/README.pdf).
+Please read [User-Equilibrium-Solution.pdf](/README.pdf). (This part will be updated in few weeks)
 
 ## INSTRUCTIONS
 
-### Data Input
+All the things are done within 3 main procedures:
 
-There are two ways to introduce data into model: First, like in the file `data.py`, all the input could be introduced by directly coding. Second, you can choose to use a excel file as the interface.
+### 1. Data input
 
-### Solve
+There are two ways to introduce data into model: First one, invoke `TrafficFlowModel.__init__`. Second one, invoke `TrafficFlowModel.create_template` and `TrafficFlowModel.read_data_from_excel` choose to use a excel file as the interface. 
+
+### 2. Solve
 
 Invoke `TrafficFlowModel.solve`
 
-### Output report
+### 3. Output report
 
-Invoke `TrafficFlowModel.report` or `TrafficFlowModel.report_to_excel`
+Invoke `TrafficFlowModel.report` and/or `TrafficFlowModel.report_to_excel`
+
+## TIPS
+
+1. Parameters such as `TrafficFlowModel._alpha`, `TrafficFlowModel._beta` and `TrafficFlowModel._conv_accuracy` are directly exposed to users, one can revise them according to the requirements.
+2. Notice the order of the data and their mutual correspondence while using the first kind of data input method. 
+3. In the file `main.py`, all the common methods of `TrafficFlowModel` class are given.
+4. All the functions in the repository are more or less with illustrations.
+5. If you have trouble with implementing of model, or you find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com) without hesitation.
 
 ## EXAMPLE
 
@@ -26,7 +36,7 @@ This will designed example was provided by Prof. [F. Xiao](https://scholar.googl
 
 ### Graph display
 
-![](images_folder/NETWORK.png)
+![](img/NETWORK.png)
 
 ### Parameters of links
 

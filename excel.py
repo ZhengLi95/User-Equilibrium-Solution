@@ -3,23 +3,20 @@ import xlrd
 
 class ExcelProcessor(object):
 
-    def __init__(self, filename= "input"):
-        ''' Create an instance of ExcelProcessor class, and
-            initialize it by only a name of the file in which
-            you will input the basic data. Notice the file
-            name cannot be empty!
+    def __init__(self):
+        ''' Create an instance of ExcelProcessor class
         '''
-        self.__filename = filename
+        self.__input_filename = "input.xls"
+        self.__output_filename = "output.xls"
 
     def create_template(self):
-        ''' Create a template file of input data by
-            given name under current work directory
+        ''' Create a template file of input data
+            under current work directory
         '''
         workbook = xlwt.Workbook()
 
-        sheet0 = workbook.add_sheet(sheetname= 'BASIC_DATA', cell_overwrite_ok= True)
+        sheet0 = workbook.add_sheet(sheetname= 'BASIC_PARAMS', cell_overwrite_ok= True)
         sheet1 = workbook.add_sheet(sheetname= 'DEMAND', cell_overwrite_ok= True)
-        sheet2 = workbook.add_sheet(sheetname= 'PARAMS', cell_overwrite_ok= True)
 
         title_sheet0 = ['From', 'To', 'Free time (km)', 'No. of Lane', 'Free Flow Speed (km/h)', 'Capacity per lane (PCU)']
         for i in range(len(title_sheet0)):
@@ -59,86 +56,57 @@ class ExcelProcessor(object):
             [6750, 6000],
             [5250, 7500]
         ]
-
         for i in range(1, len(demands)+1):
             for j in range(1, len(demands)+1):
                 sheet1.write(i, j, demands[i-1][j-1])
-        sheet2.write(0, 0, 'ALPHA')
-        sheet2.write(0, 1, 0.15)
-        sheet2.write(1, 0, 'BETA')
-        sheet2.write(1, 1, 4)
 
-        workbook.save(self.__filename + ".xls")
+        workbook.save(self.__input_filename)
 
-    def CreateNLMatrix(self, data_location):
+    def read_links(self):
+        ''' Read the topology of the graph
+            from the file `input.xls`
+        '''
+        workbook = xlrd.open_workbook(self.__input_filename)
+        data = workbook.sheet_by_index(0)
+        rows = data.nrows
+        links = [ [self.__trans(data.cell(i, 0).value), self.__trans(data.cell(i, 1).value)] for i in range(1, rows) ]
+        return links
 
-        try:
-            workbook = xlrd.open_workbook(data_location)
-        except IOError:
-            print('Please follow the instruction in README: Build a template by running create_template.py!')
-            exit()
-
+    def read_basic_params(self):
+        ''' Read the values of variables link_free_time
+            and link_capacity from the file `input.xls`
+        '''
+        workbook = xlrd.open_workbook(self.__input_filename)
         data = workbook.sheet_by_index(0)
         rows = data.nrows
 
-        NL_matrix = []
+        distance = [float(data.cell(row, 2).value) for row in range(1, rows)]
+        link_capacity = [float(data.cell(row, 3).value * float(data.cell(row, 5).value)) for row in range(1, rows)]
+        free_speed = [float(data.cell(row, 4).value) for row in range(1, rows)]
+        link_free_time = [distance[i] / free_speed[i] * 60 for i in range(len(link_capacity))]
 
-        for row in range(1, rows):
-            NL_matrix.append([int(data.cell(row, 0).value) - 1, int(data.cell(row, 1).value) - 1])
+        return link_free_time, link_capacity
 
-        return NL_matrix
-
-    def ReadBasicData(self, data_location):
-
-        workbook = xlrd.open_workbook(data_location)
-        data = workbook.sheet_by_index(0)
-        rows = data.nrows
-
-        distance = []
-        capacity = []
-        free_speed = []
-        t0 = []
-
-        for row in range(1, rows):
-            distance.append(float(data.cell(row, 2).value))
-
-        for row in range(1, rows):
-            capacity.append(float(data.cell(row, 3).value * float(data.cell(row, 5).value)))
-
-        for row in range(1, rows):
-            free_speed.append(int(data.cell(row, 4).value))
-
-        for i in range(len(capacity)):
-            t0.append(distance[i] / free_speed[i] * 60)
-
-        return capacity, t0
-
-    def read_demands(self, data_location):
-
-        workbook = xlrd.open_workbook(data_location)
+    def read_demands(self):
+        ''' Read the values of variable origins, 
+            destinations and demands from the
+            file `input.xls`
+        '''
+        workbook = xlrd.open_workbook(self.__input_filename)
         demand = workbook.sheet_by_index(1)
         rows = demand.nrows
         cols = demand.ncols
 
-        demands = []
-        for i in range(1, rows):
-            for j in range(1, cols):
-                od = [int(demand.cell(i, 0).value - 1), int(demand.cell(0, j).value - 1)]
-                od.append(demand.cell(i, j).value)
-                demands.append(od)
+        origins = [self.__trans(demand.cell(i, 0).value) for i in range(1, rows)]
+        destinations = [self.__trans(demand.cell(0, j).value) for j in range(1, cols)]
+        demands = [demand.cell(i, j).value for i in range(1, rows) for j in range(1, cols)]
 
-        return demands
+        return origins, destinations, demands
 
-    def read_params(self, data_location):
-
-        workbook = xlrd.open_workbook(data_location)
-        params = workbook.sheet_by_index(2)
-        alpha = params.cell(0, 1).value
-        beta = params.cell(1, 1).value
-
-        return alpha, beta
-
-    def PrintAnswers2XLS(self, file_location, link_flow, link_time, path_time, vc_ratio, total_time, NL_matrix, LP_matrix):
+    def report_to_excel(self, links, link_flow, link_time, path_time, link_vc, LP_matrix):
+        ''' Interface between Python and Excel, 
+            used for generating the solution report
+        '''
 
         workbook = xlwt.Workbook()
         flow_sheet = workbook.add_sheet(sheetname= 'FLOW', cell_overwrite_ok= True)
@@ -150,15 +118,15 @@ class ExcelProcessor(object):
         for i in range(len(title1)):
             flow_sheet.write(0, i, title1[i])
 
-        for row in range(1, len(NL_matrix)+1):
+        for row in range(1, len(links)+1):
             flow_sheet.write(row, 0, row)
-            flow_sheet.write(row, 1, NL_matrix[row-1][0] + 1)
-            flow_sheet.write(row, 2, NL_matrix[row-1][1] + 1)
-            flow_sheet.write(row, 3, round(link_flow[0, row-1], 3))
-            flow_sheet.write(row, 4, round(link_time[0, row-1], 3))
-            flow_sheet.write(row, 5, round(vc_ratio[0, row-1], 3))
+            flow_sheet.write(row, 1, links[row-1][0])
+            flow_sheet.write(row, 2, links[row-1][1])
+            flow_sheet.write(row, 3, round(link_flow[row-1], 3))
+            flow_sheet.write(row, 4, round(link_time[row-1], 3))
+            flow_sheet.write(row, 5, round(link_vc[row-1], 3))
 
-        title2 = ['No.', 'Path Flow']
+        title2 = ['No.', 'Path Time']
         width2 = width1 + len(title2) + 1
 
         for i in range(len(title2)):
@@ -166,14 +134,7 @@ class ExcelProcessor(object):
 
         for row in range(1, path_time.shape[0] + 1):
             flow_sheet.write(row, 0 + width1, row)
-            flow_sheet.write(row, 1 + width1, round(path_time[row-1,0], 3))
-
-        title3 = ['Total Travel Time']
-
-        for i in range(len(title3)):
-            flow_sheet.write(0, i + width2, title3[i])
-
-        flow_sheet.write(1, width2, round(total_time[0], 3))
+            flow_sheet.write(row, 1 + width1, round(path_time[row-1], 3))
 
         graph_sheet.write(0, 0, 'LP Matrix')
 
@@ -187,5 +148,15 @@ class ExcelProcessor(object):
             for j in range(LP_matrix.shape[1]):
                 graph_sheet.write(i+1, j+1, int(LP_matrix[i,j]))
 
-
-        workbook.save(file_location)
+        workbook.save(self.__output_filename)
+    
+    def __trans(self, num):
+        """ Try to transform a float into int, and then
+            into string type. If input is not float, it
+            will be returned back without any change
+        """
+        if isinstance(num, float):
+            return str(int(num))
+        else:
+            return num
+        

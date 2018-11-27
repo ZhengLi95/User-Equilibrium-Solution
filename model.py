@@ -1,4 +1,5 @@
-from graph import TrafficNetwork
+from graph import TrafficNetwork, Graph
+from excel import ExcelProcessor
 import numpy as np
 
 
@@ -10,8 +11,8 @@ class TrafficFlowModel:
         into the model both by initialization and by using the
         excel interface.
     '''
-    def __init__(self, graph= None, origins= None, destinations= None, 
-    demands= None, link_free_time= None, link_capacity= None):
+    def __init__(self, graph= None, origins= [], destinations= [], 
+    demands= [], link_free_time= None, link_capacity= None):
 
         self.__network = TrafficNetwork(graph= graph, O= origins, D= destinations)
 
@@ -25,7 +26,7 @@ class TrafficFlowModel:
         self._beta = 4 
 
         # Convergent criterion
-        self._conv_accuracy = 1e-6
+        self._conv_accuracy = 1e-5
 
         # Boolean varible: If true print the detail while iterations
         self.__detail = False
@@ -38,6 +39,49 @@ class TrafficFlowModel:
         self.__final_link_flow = None
         self.__iterations_times = None
 
+        # Class for excel interface
+        self.__ep = ExcelProcessor()
+
+    def create_template(self):
+        ''' Create a template file of input data
+            under current work directory, but notice
+            that variables like `alpha`, `beta` and
+            `conv_accurary` are not included in the file
+        '''
+        self.__ep.create_template()
+
+    def read_data(self):
+        ''' Read the data from created tempalte, whose
+            name is `input.xls`. Notice that you must 
+            fill in all your data properly before invoking
+            this method. Since the compatibility in our
+            case is not very good, using this way to
+            introduce data into model is not very recommended
+        '''
+        link_free_time, link_capacity = self.__ep.read_basic_params()
+        origins, destinations, demands = self.__ep.read_demands()
+        links = self.__ep.read_links()
+
+        self.__insert_links_in_order(links)
+        for origin in origins:
+            self.__network.add_origin(origin)
+        for destination in destinations:
+            self.__network.add_destination(destination)
+        
+        self.__link_free_time = np.array(link_free_time)
+        self.__link_capacity = np.array(link_capacity)
+        self.__demand = np.array(demands)
+
+    def __insert_links_in_order(self, links):
+        ''' Insert the links as the expected order into the
+            data structure `TrafficFlowModel.__network`
+        '''
+        first_vertice = [link[0] for link in links]
+        for vertex in first_vertice:
+            self.__network.add_vertex(vertex)
+        for link in links:
+            self.__network.add_edge(link)
+        
     def solve(self):
         ''' Solve the traffic flow assignment model (user equilibrium)
             by Frank-Wolfe algorithm, all the necessary data must be 
@@ -135,7 +179,25 @@ class TrafficFlowModel:
             this function can be invoked only after the
             model is solved.
         '''
-        pass
+        if self.__solved:
+            
+            # Do the computation
+            link_flow = self.__final_link_flow
+            link_time = self.__link_flow_to_link_time(link_flow)
+            path_time = self.__link_time_to_path_time(link_time)
+            link_vc = link_flow / self.__link_capacity
+
+            self.__ep.report_to_excel(self.__network.edges(), link_flow, link_time, path_time, link_vc, self.__network.LP_matrix())
+
+            print(self.__dash_line())
+            print("TRAFFIC FLOW ASSIGN MODEL (USER EQUILIBRIUM) \nFRANK-WOLFE ALGORITHM - REPORT OF SOLUTION")
+            print(self.__dash_line())
+            print(self.__dash_line())
+            print("TIMES OF ITERATION : %d" % self.__iterations_times)
+            print(self.__dash_line())
+            print(self.__dash_line())
+            print("FOR THE DETAIL PLEASE CHECK OUTPUT.XLS")
+            print(self.__dash_line())
 
     def __all_or_nothing_assign(self, link_flow):
         ''' Perform the all-or-nothing assignment of
@@ -196,7 +258,6 @@ class TrafficFlowModel:
             the path traveling time.
             The input is an array.
         '''
-        n_paths = self.__network.num_of_paths()
         path_time = link_time.dot(self.__network.LP_matrix())
         return path_time
     
