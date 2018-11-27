@@ -1,20 +1,24 @@
-from graph import TrafficNet
+from graph import TrafficNetwork
 import numpy as np
 
 
 class TrafficFlowModel:
+    ''' TRAFFIC FLOW ASSIGN MODEL
+        Inside the Frank-Wolfe algorithm is given, one can use
+        the method `solve` to compute the numerical solution of
+        User Equilibrium problem, and the input could be introduced
+        into the model both by initialization and by using the
+        excel interface.
+    '''
+    def __init__(self, graph= None, origins= None, destinations= None, 
+    demands= None, link_free_time= None, link_capacity= None):
 
-    def __init__(self, g, O, D, demand, link_free_time, link_capacity):
-
-        self.__network = TrafficNet(graph_dict= g, O= O, D= D)
-
-        n_links = self.__network.num_of_links()
-        n_paths = self.__network.num_of_paths()
+        self.__network = TrafficNetwork(graph= graph, O= origins, D= destinations)
 
         # Initialization of parameters
         self.__link_free_time = np.array(link_free_time)
         self.__link_capacity = np.array(link_capacity)
-        self.__demand = np.array(demand)
+        self.__demand = np.array(demands)
 
         # Alpha and beta (used in performance function)
         self._alpha = 0.15
@@ -125,6 +129,13 @@ class TrafficFlowModel:
                 print("%2d : group= %2d, time= %6.2f, path= %s" % (i, self.__network.paths_category()[i], path_time[i], self.__network.paths()[i]))
         else:
             raise ValueError("The report could be generated only after the model is solved!")
+
+    def report_to_excel(self):
+        ''' Generate a report of the result to excel file,
+            this function can be invoked only after the
+            model is solved.
+        '''
+        pass
 
     def __all_or_nothing_assign(self, link_flow):
         ''' Perform the all-or-nothing assignment of
@@ -280,13 +291,13 @@ class TrafficFlowModel:
             return False
     
     def disp_detail(self):
-        ''' Display all the numerical detail of each variable
+        ''' Display all the numerical details of each variable
             during the iteritions.
         '''
         self.__detail = True
 
     def set_disp_precision(self, precision):
-        ''' Set the precision of display, which influents only
+        ''' Set the precision of display, which influences only
             the digit of numerical component in arrays.
         '''
         np.set_printoptions(precision= precision)

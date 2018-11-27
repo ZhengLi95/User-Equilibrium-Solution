@@ -1,22 +1,21 @@
-""" DIRECTED GRAPH CLASS
-
-A simple Python graph class, demonstrating the essential 
-facts and functionalities of directed graphs, and it is
-designed for our traffic flow assignment problem, thus we
-have the following assumptions:
-
-1. The graph contains no self-loop, that is, an edge that 
-connects a vertex to itself;
-
-2. There is at most one edge which connects two vertice;
-
-Revised from: https://www.python-course.eu/graphs_python.php
-and in our case we must give order to all the edges, thus we
-do not use the unordered data structure.
-"""
-
 
 class Graph(object):
+    """ DIRECTED GRAPH CLASS
+
+    A simple Python graph class, demonstrating the essential 
+    facts and functionalities of directed graphs, and it is
+    designed for our traffic flow assignment problem, thus we
+    have the following assumptions:
+
+    1. The graph contains no self-loop, that is, an edge that 
+    connects a vertex to itself;
+
+    2. There is at most one edge which connects two vertice;
+
+    Revised from: https://www.python-course.eu/graphs_python.php
+    and in our case we must give order to all the edges, thus we
+    do not use the unordered data structure.
+    """
 
     def __init__(self, graph_dict= None):
         """ initializes a directed graph object by a dictionary,
@@ -132,10 +131,16 @@ class Graph(object):
             res += str(edge) + " "
         return res
 
-class TrafficNet(Graph):
+class TrafficNetwork(Graph):
+    ''' TRAFFIC NETWORK CLASS
+        Traffic network is a combination of basic graph
+        and the demands, the informations about links, paths
+        and link-path incidence matrix will be generated
+        after the initialization.
+    '''
 
-    def __init__(self, graph_dict= None, O= None, D= None):
-        Graph.__init__(self, graph_dict)
+    def __init__(self, graph= None, O= None, D= None):
+        Graph.__init__(self, graph)
         self.__origins = O
         self.__destinations = D
         self.__cast()
