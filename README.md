@@ -32,7 +32,7 @@ Invoke `TrafficFlowModel.report` and/or `TrafficFlowModel.report_to_excel`
 
 ## EXAMPLE
 
-This will designed example was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/)
+This well-designed example was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/)
 
 ### Graph display
 
