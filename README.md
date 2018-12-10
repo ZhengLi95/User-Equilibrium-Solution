@@ -4,7 +4,7 @@ User equilibrium is a classical problem on the traffic flow assignment in the fi
 
 ## THEORY
 
-Please read [User-Equilibrium-Solution.pdf](/README.pdf). (This part will be updated in few weeks)
+Please read [User-Equilibrium-Solution.pdf](static/README.pdf). (This part will be updated in few weeks)
 
 ## INSTRUCTIONS
 
@@ -36,7 +36,7 @@ This well-designed example was provided by Prof. [F. Xiao](https://scholar.googl
 
 ### Graph display
 
-![](img/NETWORK.png)
+![](static/NETWORK.png)
 
 ### Parameters of links
 
