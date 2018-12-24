@@ -29,7 +29,7 @@ Then you can just run `python main.py`.
 1. Parameters such as `TrafficFlowModel._alpha`, `TrafficFlowModel._beta` and `TrafficFlowModel._conv_accuracy` are directly exposed to users, one can revise them according to the requirements.
 2. Notice the mutual correspondence between each link and its parameters like capacity and free travel time, while using the first kind of input method, that is, writing down the data directly into `data.py`.
 3. If you want to extend this model according to your own demand, I strongly suggest that do NOT use the excel file as the data exchange interface, because it is not robust.
-4. When the program doesn't go well, please firstly use `model.__str__` (which is already contained in `model.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
+4. When the program doesn't go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
 5. In the file `main.py`, all the common methods of `TrafficFlowModel` class are given in advance, which are guidelines for the user, and all functions in the repository are more or less with illustrations.
 6. If you have trouble with implementing of model, or you find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com) without hesitation.
 
