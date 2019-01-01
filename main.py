@@ -5,7 +5,7 @@ import data as dt
 # Method 1: Direct initialization
 mod = TrafficFlowModel(dt.graph, dt.origins, dt.destinations, 
 dt.demand, dt.free_time, dt.capacity)
-# Method 2: By Excel interface
+# Method 2: By Excel interface (NOT RECOMMANDED)
 mod = TrafficFlowModel()
 mod.create_template()
 mod.read_data()
