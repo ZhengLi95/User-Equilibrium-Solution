@@ -138,6 +138,23 @@ class TrafficFlowModel:
                 link_flow = new_link_flow
                 counter += 1
 
+    def _formatted_solution(self):
+        ''' According to the link flow we obtained in `solve`,
+            generate a tuple which contains four elements:
+            `link flow`, `link travel time`, `path travel time` and
+            `link vehicle capacity ratio`. This function is exposed
+            to users in case they need do some extensions based on
+            the computation result.
+        '''
+        if self.__solved:
+            link_flow = self.__final_link_flow
+            link_time = self.__link_flow_to_link_time(link_flow)
+            path_time = self.__link_time_to_path_time(link_time)
+            link_vc = link_flow / self.__link_capacity
+            return link_flow, link_time, path_time, link_vc
+        else:
+            return None
+
     def report(self):
         ''' Generate the report of the result in console,
             this function can be invoked only after the
@@ -150,10 +167,7 @@ class TrafficFlowModel:
             # Print the report
             
             # Do the computation
-            link_flow = self.__final_link_flow
-            link_time = self.__link_flow_to_link_time(link_flow)
-            path_time = self.__link_time_to_path_time(link_time)
-            link_vc = link_flow / self.__link_capacity
+            link_flow, link_time, path_time, link_vc = self._formatted_solution()
 
             print(self.__dash_line())
             print("TRAFFIC FLOW ASSIGN MODEL (USER EQUILIBRIUM) \nFRANK-WOLFE ALGORITHM - REPORT OF SOLUTION")
@@ -182,10 +196,7 @@ class TrafficFlowModel:
         if self.__solved:
             
             # Do the computation
-            link_flow = self.__final_link_flow
-            link_time = self.__link_flow_to_link_time(link_flow)
-            path_time = self.__link_time_to_path_time(link_time)
-            link_vc = link_flow / self.__link_capacity
+            link_flow, link_time, path_time, link_vc = self._formatted_solution()
 
             self.__ep.report_to_excel(self.__network.edges(), link_flow, link_time, path_time, link_vc, self.__network.LP_matrix())
 

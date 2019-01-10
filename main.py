@@ -29,3 +29,6 @@ mod.report()
 
 # Generate report to .xls file
 mod.report_to_excel()
+
+# Return the solution if necessary
+mod._formatted_solution()
