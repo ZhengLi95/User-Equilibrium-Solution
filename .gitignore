@@ -111,3 +111,8 @@ venv.bak/
 .mypy_cache/
 input.xls
 output.xls
+
+
+# Latex
+theory/*
+!*/*.tex
