@@ -7,9 +7,7 @@ class TrafficFlowModel:
     ''' TRAFFIC FLOW ASSIGN MODEL
         Inside the Frank-Wolfe algorithm is given, one can use
         the method `solve` to compute the numerical solution of
-        User Equilibrium problem, and the input could be introduced
-        into the model both by initialization and by using the
-        excel interface.
+        User Equilibrium problem.
     '''
     def __init__(self, graph= None, origins= [], destinations= [], 
     demands= [], link_free_time= None, link_capacity= None):
@@ -38,39 +36,6 @@ class TrafficFlowModel:
         # computation result
         self.__final_link_flow = None
         self.__iterations_times = None
-
-        # Class for excel interface
-        self.__ep = ExcelProcessor()
-
-    def create_template(self):
-        ''' Create a template file of input data
-            under current work directory, but notice
-            that variables like `alpha`, `beta` and
-            `conv_accurary` are not included in the file
-        '''
-        self.__ep.create_template()
-
-    def read_data(self):
-        ''' Read the data from created tempalte, whose
-            name is `input.xls`. Notice that you must 
-            fill in all your data properly before invoking
-            this method. Since the compatibility in our
-            case is not very good, using this way to
-            introduce data into model is not very recommended
-        '''
-        link_free_time, link_capacity = self.__ep.read_basic_params()
-        origins, destinations, demands = self.__ep.read_demands()
-        links = self.__ep.read_links()
-
-        self.__insert_links_in_order(links)
-        for origin in origins:
-            self.__network.add_origin(origin)
-        for destination in destinations:
-            self.__network.add_destination(destination)
-        
-        self.__link_free_time = np.array(link_free_time)
-        self.__link_capacity = np.array(link_capacity)
-        self.__demand = np.array(demands)
 
     def __insert_links_in_order(self, links):
         ''' Insert the links as the expected order into the
@@ -187,28 +152,6 @@ class TrafficFlowModel:
                 print("%2d : group= %2d, time= %6.2f, path= %s" % (i, self.__network.paths_category()[i], path_time[i], self.__network.paths()[i]))
         else:
             raise ValueError("The report could be generated only after the model is solved!")
-
-    def report_to_excel(self):
-        ''' Generate a report of the result to excel file,
-            this function can be invoked only after the
-            model is solved.
-        '''
-        if self.__solved:
-            
-            # Do the computation
-            link_flow, link_time, path_time, link_vc = self._formatted_solution()
-
-            self.__ep.report_to_excel(self.__network.edges(), link_flow, link_time, path_time, link_vc, self.__network.LP_matrix())
-
-            print(self.__dash_line())
-            print("TRAFFIC FLOW ASSIGN MODEL (USER EQUILIBRIUM) \nFRANK-WOLFE ALGORITHM - REPORT OF SOLUTION")
-            print(self.__dash_line())
-            print(self.__dash_line())
-            print("TIMES OF ITERATION : %d" % self.__iterations_times)
-            print(self.__dash_line())
-            print(self.__dash_line())
-            print("FOR THE DETAIL PLEASE CHECK OUTPUT.XLS")
-            print(self.__dash_line())
 
     def __all_or_nothing_assign(self, link_flow):
         ''' Perform the all-or-nothing assignment of

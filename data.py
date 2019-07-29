@@ -1,6 +1,6 @@
-""" EXAMPLE
-In this file you can find sample data for applying
-the TrafficFlowMod class in model.py file
+""" SAMPLE
+In this file you can find sample data which could be used
+into the TrafficFlowMod class in model.py file
 """
 
 # Graph represented by directed dictionary
@@ -20,10 +20,10 @@ graph = [
     ("17", [])
 ]
 
-# Capacity of each link (Conjugated to Graph)
+# Capacity of each link (Conjugated to Graph with order)
 capacity = [3600] * 19
 
-# Free travel time of each link (Conjugated to Graph)
+# Free travel time of each link (Conjugated to Graph with order)
 free_time = [
     10, 10, 
     10, 14.1,
@@ -42,7 +42,7 @@ free_time = [
 origins = ["5", "6"]
 destinations = ["15", "17"]
 
-# Demand bewteen each OD pair (Conjugated to the 
-# Cartesian product of Origins and destinations)
+# Demand bewteen each OD pair (Conjugated to the Cartesian 
+# product of Origins and destinations with order)
 demand = [6000, 6750, 7500, 5250]
 
