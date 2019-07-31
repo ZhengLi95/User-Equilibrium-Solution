@@ -12,7 +12,7 @@ All the things are done within 3 main procedures, implement them in `main.py`:
 
 ### 1. Data input
 
-There are two ways to introduce data into model: First one, invoke `TrafficFlowModel.__init__`. Second one, invoke `TrafficFlowModel.create_template` and `TrafficFlowModel.read_data_from_excel`  to use a excel interface. 
+All the data must be introduced into model by the constructor `TrafficFlowModel.__init__`.
 
 ### 2. Solve
 
@@ -20,22 +20,22 @@ Invoke `TrafficFlowModel.solve`.
 
 ### 3. Output report
 
-Invoke `TrafficFlowModel.report` and/or `TrafficFlowModel.report_to_excel`.
+Invoke `TrafficFlowModel.report`.
 
-Then you can just run `python main.py`.
+Then you can just run `$ python main.py`.
 
 ## TIPS
 
-1. Parameters such as `TrafficFlowModel._alpha`, `TrafficFlowModel._beta` and `TrafficFlowModel._conv_accuracy` are directly exposed to users, one can revise them according to the requirements.
-2. Notice the mutual correspondence between each link and its parameters like capacity and free travel time, while using the first kind of input method, that is, writing down the data directly into `data.py`.
-3. If you want to extend this model according to your own demand, I strongly suggest that do NOT use the excel file as the data exchange interface, because it is not robust.
-4. When the program doesn't go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
-5. In the file `main.py`, all the common methods of `TrafficFlowModel` class are given in advance, which are guidelines for the user, and all functions in the repository are more or less with illustrations.
-6. If you have trouble with implementing of model, or you find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com) without hesitation.
+1. Parameters in the link performance function such as `TrafficFlowModel._alpha` and `TrafficFlowModel._beta` are directly exposed to users, one can revise them if necessary.
+2. Notice the mutual correspondence between the input data while writing them into the `data.py`.
+3. When the program doesn't go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
+4. In the file `main.py`, all the common methods of `TrafficFlowModel` class are given in advance, which are guidelines for the user, and all functions in the repository are more or less with illustrations.
+5. This program is not numerical stable when it encounters big road network.
+6. If you have trouble with implementing of model, or find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com).
 
-## EXAMPLE
+## SAMPLE
 
-This well-designed example was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/)
+This well-designed sample was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/)
 
 ### Graph display
 
@@ -216,4 +216,3 @@ This well-designed example was provided by Prof. [F. Xiao](https://scholar.googl
 # 23 : group=  3, time= 103.98, path= ['6', '7', '10', '13', '16', '17']
 # 24 : group=  3, time= 103.97, path= ['6', '8', '11', '14', '17']
 ```
-
