@@ -1,18 +1,84 @@
-\documentclass[a4paper,10pt]{article}
-\usepackage[utf8]{inputenc}
+\documentclass{article}
+
+\input{packages.tex}
+\input{marges.tex}
+\input{commandes.tex}
 
 \title{User Equilibrium Solution}
-\author{Share\LaTeX}
+
+\addbibresource{Biblio}
 
 \begin{document}
 
 \maketitle
 
-This document is an example of BibTeX using in bibliography management. Three items are cited: \textit{The \LaTeX\ Companion} book \cite{latexcompanion}, the Einstein journal paper \cite{einstein}, and the Donald Knuth's website \cite{knuthwebsite}. The \LaTeX\ related items are \cite{latexcompanion,knuthwebsite}. 
+% \begin{abstract}
+%     Traffic flow assignment..
+% \end{abstract}
 
-\medskip
+\section{Problem Statement}
 
-\bibliographystyle{unsrt}%Used BibTeX style is unsrt
-\bibliography{sample}
+\subsection{Decision Variables and Parameters}
+
+Suppose we have a road network, which can be represented by nodes and directed links. We denote the nodes set as $ \cN $, and the links set $ \cA $, whose elements are ordered tuples of form $ (n_1, n_2) $, where $ n_1, n_2 \in \cN $. We also have set of origin nodes $ \cR \subset \cN $ and set of destination nodes $ \cS \subset \cN $. Then, we shall define the Origin-Destination (O-D) pair, which is exactly the ordered tuple of form $ (r, s) $, where $ r \in \cR $ and $ s \in \cS $.
+
+Moreover, we need the concept of path. We denote the set of paths connecting O-D pair $ r $-$ s $ as $ \cK_{rs} $, whose element can be roughly represented as
+$$ \{ (r, n_1), (n_1, n_2), \cdots, (n_{k-1}, n_k), (n_k, s) \} $$ 
+where $ (r, n_1) \in \cA $, $ (n_k, s) \in \cA $, and $ (n_j, n_{j+1}) \in \cA $ for all $ 2 \le j < k $; $ n_1, n_2, \cdots, n_k \in \cN $, $ r \in \cR $ and $ s \in \cS $; $ k \in \N $. In particular, we shall introduce function $ \delta_{a, k}^{rs} $ to represent the relationship between link and path; that is, if the link $ a \in \cA $ belongs to $ k \in \cK_{rs} $, then $ \delta_{a, k}^{rs} = 1 $, otherwise it equals to $ 0 $.
+
+Now, we should introduce the concept of flow, which represents the number of passenger car units passing through specific link or path in some unit time. We denote the flow on the link $ a \in \cA $ as $ x_a $, denote $ f_k^{rs} $ as the flow on path $ k $ connecting O-D pair $ r $-$ s $. Notice that $ f_k^{rs} $ are exactly our decision variables, and $ x_a, f_k^{rs} \in \R^+ := [0, + \infty) $. On the other hand, for each O-D pair $ r $-$ s $, there is a conjugated term: demand $ q_{rs} $, which indicates the traffic demand between origin $ r $ and destination $ s $ during the observation period. Thus, we apparently have the constraint: 
+$$ \sum_{k \in \cK_{rs}} f_{k}^{rs} = q_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS $$
+Beside, we can also use $ \delta_{a, k}^{rs} $ to show the relationship between link flow $ x_a $ and path flow $ f_k^{rs} $, which can be written as: 
+\begin{equation} \label{eq-path-flow-to-link-flow}
+    x_a = \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} 
+\end{equation}
+
+Associated with each link $ a \in \cA $, there is link performance function $ p_a : \R^+ \rightarrow \R^+ $, which express the traveling time for each car unit under given traffic flow, with the following assumptions:
+\begin{enumerate}
+    \item $ p \in \cC^2 (\R^+) $, i.e. $ f $ is twice continuously differentiable on $ \R^+ $.
+    \item $ p $ is non-decreasing on $ \R^+ $.
+    \item $ p $ is coercive, i.e. $ p(x) \rightarrow + \infty $ as $ x \rightarrow \infty $.
+\end{enumerate}
+The traveling time on the path $ k \in \cK_{rs} $ is denoted as $ c_k^{rs} $, which can be written as: 
+\begin{equation} \label{eq-link-time-to-path-time}
+    c_k^{rs} = \sum_a t_a \delta_{a, k}^{rs} ~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{equation}
+where $ t_a := p_a (x_a) $ is the traveling time on the link $ a \in \cA $.
+
+\subsection{Objective and Definition of User Equilibrium}
+
+The definition of user equilibrium can be concisely expressed as \cite{Shef85}: no traveler can improve his travel time by unilaterally changing routes.
+
+Meanwhile, Wardrop \cite{wardrop1952road} has provided an equivalent definition of user equilibrium, which is call \textit{Wardrop's First Principle}: For each O-D pair, at user equilibrium, the travel time on all used paths is equal, and (also) less than or equal to the travel time that would be experienced by a single vehicle on any unused path. Therefore, we can state our problem in the following way:
+
+\begin{prob}
+    Given road network $ \{ \cN, \cE, \cR, \cS \} $, traffic demands $ (q_{rs})_{r \in \cR, s \in \cS} $ and link performance functions $ (p_a)_{a \in \cA} $. Determine all $ f_k^{rs} \in \R^+ $ such that the \textit{Wardrop First Principle} holds.
+\end{prob}
+
+In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $, by Equality \ref{eq-path-flow-to-link-flow} we can calculate flow on links $ (x_a)_{a \in \cA} $. Then, using link performance functions $ (p_a)_{a \in \cA} $ we can obtain the traveling time of links $ (t_a)_{a \in \cA} $. According to Equality \ref{eq-link-time-to-path-time} we can compute the traveling time of paths $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $. As we said, the result $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $ must satisfies the \textit{Wardrop First Principle}, that is: for each fixed $ r \in \cR $ and $ s \in \cS $, there exists a constant $ c_{rs} \in \R^+ $ such that: $ c_k^{rs} \equiv c_{rs} $ for all $ k \in K_{rs} $ such that $ f_k^{rs} > 0 $; and $ c_k^{rs} \ge c_{rs} $ for all $ k \in \cK_{rs} $ such that $ f_k^{rs} = 0 $. 
+
+\section{Existence and Uniqueness of Solution}
+
+[HELP WANTED]
+
+\section{Equivalent Mathematical Formulation}
+
+The most famous mathematical formulation for the user equilibrium is as follows: 
+
+$$ \min_{\boldsymbol{f} \ge \boldsymbol{0}} \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} g_a (\omega) d \omega $$
+
+subject to
+\begin{align*}
+    \sum_{k \in \cK_{rs}} f_{k}^{rs} &= q_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS \\
+    x_a (\boldsymbol{f}) &= \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs}
+\end{align*}
+
+This objective function does not have any intuitive economic or behavioral interpretation. It should be viewed strictly as a mathematical construct that is utilized to solve equilibrium problems. \cite{Shef85}
+
+\section{Proof of Equivalence}
+
+[HELP WANTED]
+
+\printbibliography
 
 \end{document}

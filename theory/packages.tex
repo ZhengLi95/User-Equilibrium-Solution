@@ -1,0 +1,119 @@
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%%%%%%%%%%%%%%%%%%%% T E X T E %%%%%%%%%%%%%%%%%%%%%%
+
+% package qui permettent d'utiliser tout un tas de symboles mathématiques
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+
+\usepackage{amssymb}
+\usepackage{empheq}
+\usepackage{physics}
+\usepackage[squaren,Gray]{SIunits}
+
+%ceiling function
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+\usepackage{csquotes}
+
+% Polices
+\usepackage{mathpazo}
+
+% package qui permettent de personaliser les puces des listes
+\usepackage{enumerate}
+\usepackage{enumitem}
+
+% package qui permettent d'introduire de la couleur
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\usepackage{xspace}
+
+% pour pouvoir barrer avec \cancel{}
+\usepackage{cancel}
+
+% pour la fonction indicatrice 1
+\usepackage{dsfont}
+
+% pour utiliser le symbole euro par \euro
+\usepackage{eurosym}
+
+% afficher des nombres en mode texte
+\usepackage{numprint}
+
+% to insert notes in the margin. Can be useful during the editorial process
+\usepackage{marginnote}
+\usepackage[top=1.5cm, bottom=1.5cm, outer=5cm, inner=2cm, heightrounded, marginparwidth=2.5cm, marginparsep=1cm]{geometry}
+
+
+%%%%%%%%%%%%%%%%%%%% F I G U R E S %%%%%%%%%%%%%%%%%%%%%%
+
+% package qui permettent d'inclure des graphiques
+%\usepackage{graphicx}
+%\numberwithin{figure}{section}
+
+%Pour utiliser des sous-figures
+%\usepackage{subcaption}
+
+%Pour utiliser [H] pour le placement des figures
+%\usepackage{float}
+
+%figure entourée de texte
+%\usepackage{wrapfig}
+% \begin{wrapfigure}{L}{0.4\textwidth}
+
+%Keep figures in section
+%\usepackage[section]{placeins}
+% \FloatBarrier % stops floats from descending further
+
+% Pour des références stylées
+%\usepackage{varioref}
+%\usepackage[german]{fancyref} % dispo seulement en allemand
+\usepackage[linkcolor=black,
+						urlcolor=black,
+						colorlinks=true,
+						citecolor=mygreen]{hyperref}% package qui créer des liens dynamiques dans un fichier pdf à partir de tout élément taggé
+%\usepackage{cleveref}
+
+
+%%%%%%%%%%%%%%%%%%%% D E S S I N %%%%%%%%%%%%%%%%%%%%%%
+
+%pour dessiner des graphes de fonctions
+%\usepackage{pgfplots}
+
+%%%%%%%%%%%%%%%%%%%% H E A D E R et F O O T E R %%%%%%%%%%%%%%%%%%%%%%
+
+% \usepackage{fancyhdr}
+% \fancyfoot{}
+% \fancyfoot[LE,RO]{\thepage}
+
+
+%%%%%%%%%%%%%%%%%%%%%% D I V E R S %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Bibliographie
+\usepackage[backend=bibtex,sorting=ynt]{biblatex}%sorting=none pour avoir les références selon d'ordre d'apparition dans le texte
+% sorting=ynt		backend=biber,		citestyle=alphabetic		url=false
+
+% Set a watermark
+% \usepackage{draftwatermark}
+% \SetWatermarkText{© Till \textsc{Kletti} et al.}
+% \SetWatermarkFontSize{1cm}
+% \SetWatermarkScale{1}
+% \SetWatermarkLightness{1} % white for invisibility
+% \SetWatermarkAngle{0}
+
+%%%%%%%%%%%%%%%%%%% C O D E %%%%%%%%%%%%%%%%%%%%%%%
+
+% Pour écrire du pseudo-code
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+
+% pour insérer du code
+\usepackage{listings}
+\usepackage{listingsutf8}
