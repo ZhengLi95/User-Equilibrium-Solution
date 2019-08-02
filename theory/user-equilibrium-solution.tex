@@ -27,10 +27,10 @@ $$ \{ (r, n_1), (n_1, n_2), \cdots, (n_{k-1}, n_k), (n_k, s) \} $$
 where $ (r, n_1) \in \cA $, $ (n_k, s) \in \cA $, and $ (n_j, n_{j+1}) \in \cA $ for all $ 2 \le j < k $; $ n_1, n_2, \cdots, n_k \in \cN $, $ r \in \cR $ and $ s \in \cS $; $ k \in \N $. In particular, we shall introduce function $ \delta_{a, k}^{rs} $ to represent the relationship between link and path; that is, if the link $ a \in \cA $ belongs to $ k \in \cK_{rs} $, then $ \delta_{a, k}^{rs} = 1 $, otherwise it equals to $ 0 $.
 
 Now, we should introduce the concept of flow, which represents the number of passenger car units passing through specific link or path in some unit time. We denote the flow on the link $ a \in \cA $ as $ x_a $, denote $ f_k^{rs} $ as the flow on path $ k $ connecting O-D pair $ r $-$ s $. Notice that $ f_k^{rs} $ are exactly our decision variables, and $ x_a, f_k^{rs} \in \R^+ := [0, + \infty) $. On the other hand, for each O-D pair $ r $-$ s $, there is a conjugated term: demand $ q_{rs} $, which indicates the traffic demand between origin $ r $ and destination $ s $ during the observation period. Thus, we apparently have the constraint: 
-$$ \sum_{k \in \cK_{rs}} f_{k}^{rs} = q_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS $$
+$$ \sum_{k \in \cK_{rs}} f_{k}^{rs} = q_{rs} ~~~~ \forall r \in \cR ~~ \forall s \in \cS $$
 Beside, we can also use $ \delta_{a, k}^{rs} $ to show the relationship between link flow $ x_a $ and path flow $ f_k^{rs} $, which can be written as: 
 \begin{equation} \label{eq-path-flow-to-link-flow}
-    x_a = \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} 
+    x_a = \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} ~~~~ \forall a \in \cA
 \end{equation}
 
 Associated with each link $ a \in \cA $, there is link performance function $ p_a : \R^+ \rightarrow \R^+ $, which express the traveling time for each car unit under given traffic flow, with the following assumptions:
@@ -41,7 +41,7 @@ Associated with each link $ a \in \cA $, there is link performance function $ p_
 \end{enumerate}
 The traveling time on the path $ k \in \cK_{rs} $ is denoted as $ c_k^{rs} $, which can be written as: 
 \begin{equation} \label{eq-link-time-to-path-time}
-    c_k^{rs} = \sum_a t_a \delta_{a, k}^{rs} ~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+    c_k^{rs} = \sum_a t_a \delta_{a, k}^{rs} ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
 \end{equation}
 where $ t_a := p_a (x_a) $ is the traveling time on the link $ a \in \cA $.
 
@@ -65,12 +65,12 @@ In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs}
 
 The most famous mathematical formulation for the user equilibrium is as follows: 
 
-$$ \min_{\boldsymbol{f} \ge \boldsymbol{0}} \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} g_a (\omega) d \omega $$
+$$ \min_{\boldsymbol{f} \ge \boldsymbol{0}} \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} p_a (\omega) d \omega $$
 
 subject to
 \begin{align*}
-    \sum_{k \in \cK_{rs}} f_{k}^{rs} &= q_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS \\
-    x_a (\boldsymbol{f}) &= \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs}
+    \sum_{k \in \cK_{rs}} f_{k}^{rs} &= q_{rs} ~~~~ \forall r \in \cR ~~ \forall s \in \cS \\
+    x_a (\boldsymbol{f}) &= \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} ~~~~ \forall a \in \cA
 \end{align*}
 
 This objective function does not have any intuitive economic or behavioral interpretation. It should be viewed strictly as a mathematical construct that is utilized to solve equilibrium problems. \cite{Shef85}
