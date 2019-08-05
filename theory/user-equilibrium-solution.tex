@@ -4,9 +4,10 @@
 \input{marges.tex}
 \input{commandes.tex}
 
-\title{User Equilibrium Solution}
-
 \addbibresource{Biblio}
+
+\title{User Equilibrium Solution}
+\author{Zheng Li}
 
 \begin{document}
 
@@ -35,9 +36,8 @@ Beside, we can also use $ \delta_{a, k}^{rs} $ to show the relationship between 
 
 Associated with each link $ a \in \cA $, there is link performance function $ p_a : \R^+ \rightarrow \R^+ $, which express the traveling time for each car unit under given traffic flow, with the following assumptions:
 \begin{enumerate}
-    \item $ p \in \cC^2 (\R^+) $, i.e. $ f $ is twice continuously differentiable on $ \R^+ $.
-    \item $ p $ is non-decreasing on $ \R^+ $.
-    \item $ p $ is coercive, i.e. $ p(x) \rightarrow + \infty $ as $ x \rightarrow \infty $.
+    \item $ p \in \cC^1 (\R^+) $, i.e. $ f $ is continuously differentiable on $ \R^+ $.
+    \item $ p $ is strictly increasing on $ \R^+ $.
 \end{enumerate}
 The traveling time on the path $ k \in \cK_{rs} $ is denoted as $ c_k^{rs} $, which can be written as: 
 \begin{equation} \label{eq-link-time-to-path-time}
@@ -51,33 +51,162 @@ The definition of user equilibrium can be concisely expressed as \cite{Shef85}: 
 
 Meanwhile, Wardrop \cite{wardrop1952road} has provided an equivalent definition of user equilibrium, which is call \textit{Wardrop's First Principle}: For each O-D pair, at user equilibrium, the travel time on all used paths is equal, and (also) less than or equal to the travel time that would be experienced by a single vehicle on any unused path. Therefore, we can state our problem in the following way:
 
-\begin{prob}
+\begin{prob} \label{prob-wardrop}
     Given road network $ \{ \cN, \cE, \cR, \cS \} $, traffic demands $ (q_{rs})_{r \in \cR, s \in \cS} $ and link performance functions $ (p_a)_{a \in \cA} $. Determine all $ f_k^{rs} \in \R^+ $ such that the \textit{Wardrop First Principle} holds.
 \end{prob}
 
-In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $, by Equality \ref{eq-path-flow-to-link-flow} we can calculate flow on links $ (x_a)_{a \in \cA} $. Then, using link performance functions $ (p_a)_{a \in \cA} $ we can obtain the traveling time of links $ (t_a)_{a \in \cA} $. According to Equality \ref{eq-link-time-to-path-time} we can compute the traveling time of paths $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $. As we said, the result $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $ must satisfies the \textit{Wardrop First Principle}, that is: for each fixed $ r \in \cR $ and $ s \in \cS $, there exists a constant $ c_{rs} \in \R^+ $ such that: $ c_k^{rs} \equiv c_{rs} $ for all $ k \in K_{rs} $ such that $ f_k^{rs} > 0 $; and $ c_k^{rs} \ge c_{rs} $ for all $ k \in \cK_{rs} $ such that $ f_k^{rs} = 0 $. 
-
-\section{Existence and Uniqueness of Solution}
-
-[HELP WANTED]
+In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $, by Equality \ref{eq-path-flow-to-link-flow} we can calculate flow on links $ \boldsymbol{x} := (x_a)_{a \in \cA} $. Then, using link performance functions $ (p_a)_{a \in \cA} $ we can obtain the traveling time of links $ (t_a)_{a \in \cA} $. According to Equality \ref{eq-link-time-to-path-time} we can compute the traveling time of paths $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $. As we said, the result $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $ must satisfies the \textit{Wardrop First Principle}, that is: for each fixed $ r \in \cR $ and $ s \in \cS $, there exists a constant $ c_{rs} \in \R^+ $ such that: $ c_k^{rs} \equiv c_{rs} $ for all $ k \in K_{rs} $ such that $ f_k^{rs} > 0 $; and $ c_k^{rs} \ge c_{rs} $ for all $ k \in \cK_{rs} $ such that $ f_k^{rs} = 0 $. 
 
 \section{Equivalent Mathematical Formulation}
 
-The most famous mathematical formulation for the user equilibrium is as follows: 
+\subsection{Statement of Equivalent Formulation}
 
-$$ \min_{\boldsymbol{f} \ge \boldsymbol{0}} \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} p_a (\omega) d \omega $$
+The most famous mathematical formulation for the user equilibrium is as follows:
 
-subject to
+\begin{prob} \label{prob-min-formulation}
+    Find the minimizer, if it exists, of the optimization problem
+    \begin{align} \label{eq-opt-objective-func}
+        \min_{\boldsymbol{f} \ge \boldsymbol{0}}~ z(\boldsymbol{f}) &= \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} p_a (\omega) d \omega \\ 
+        \sum_{k \in \cK_{rs}} f_{k}^{rs} &= q_{rs} ~~~~ \forall r \in \cR ~~ \forall s \in \cS \label{eq-opt-constraint-last}
+    \end{align}
+    in which 
+    $$ x_a (\boldsymbol{f}) = \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} $$
+    for all $ a \in \cA $, according to Equality \ref{eq-path-flow-to-link-flow}.
+\end{prob}
+
+We shall notice that the objective function does not have any intuitive interpretation.
+
+\subsection{Existence of Minimizer}
+ 
+Let us denote $ N := \sum_{r \in \cR} \sum_{s \in \cS} \abs{\cK_{rs}} $, $ M := \abs{\cE} $, and the the feasible set of Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last} as $ F \subset \R^N $, which exactly is
+$$ F = \{ \boldsymbol{f} \in \R^N : \boldsymbol{f} \ge 0; \sum_{k \in \cK_{rs}} f_{k}^{rs} = q_{rs}, ~\forall r \in \cR, ~\forall s \in \cS \} $$
+Obviously $ F $ is a closed subset of $ \R^N $. 
+
+Moreover, notice that the linear (therefore continuous) map $ \boldsymbol{x} : F \subset \R^N \rightarrow \R^M $ can be represented as a matrix with binary entries, i.e. matrix contains only zero or one, but it cannot be zero matrix, otherwise it will be meaningless. This property tells us: the non-negativity of $ \boldsymbol{x} $ can be inherited from the non-negativity of $ \boldsymbol{f} $. We affirm the properties of $ z : \R^N \rightarrow \R $ as:
+\begin{enumerate}
+    \item $ z $ is coercive with respect to $ \boldsymbol{f} $. In fact, if $ \boldsymbol{f} \rightarrow +\infty $, then there exists $ a_0 \in \cA $ such that $ x_{a_0} (\boldsymbol{f}) \rightarrow + \infty $; by non-negativity, monotonicity and continuity of $ p_a $, 
+    $$ z (\boldsymbol{f}) = \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} p_a (\omega) d \omega \ge \int_0^{x_{a_0} (\boldsymbol{f})} p_a (\omega) d \omega \rightarrow \infty $$ 
+    \item $ z \in \cC^0 (F) $, as the composition of continuous map $ \boldsymbol{x} \mapsto \sum_{a \in \cA} \int_0^{x_a} p_a (\omega) d \omega $ and linear map $ x_a $.
+\end{enumerate}
+
+The coercivity of $ z $ tells us the minimizer cannot appear at the infinity, then no matter where the minimizer is (if it exists), we can constrict it in a bounded and closed (since the feasible set is closed) set $ F_0 \subset F $; in other words, in a compact set $ F_0 $. The continuity of $ z $ implies the lower semi-continuity. 
+
+\begin{theo} [Weierstrass] \label{theo-weierstrass}
+    Suppose $ F_0 \subset \R^N $ is a compact set, and $ z : F_0 \rightarrow \R $ is lower semi-continuous, then there exists $ \tilde{f} \in F_0 $ such that 
+    $$ z(\tilde{f}) = \min_{f \in F_0} z(f) $$
+\end{theo}
+
+Theorem \ref{theo-weierstrass} shows the existence of minimizer of Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last}.
+
+\subsection{Convexity of Equivalent Formulation}
+
+Let us recall the definition of convex optimization problem:
+
+\begin{defi}[Convex optimization Problem]
+    A convex optimization problem is an optimization problem in which the objective function is a convex function and the feasible set is a convex set.
+\end{defi}
+
+As we know, in convex optimization problems, every local minimum is a global minimum; moreover, if the objective function is strictly convex, then we have also the uniqueness of minimizer. However, convex optimization problem does not always admit the minimizer; but luckily in the last section we have already shown the existence of minimizer of Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last}.
+
+Observe that, choose arbitrary $ \boldsymbol{f}_1, \boldsymbol{f}_2 \in F $, their convex combination $ t \boldsymbol{f}_1 + (1-t) \boldsymbol{f}_2 \in F $, where $ t \in [0, 1] $, thus $ F $ is convex. For demonstrating the convexity of $ z $, we need the following lemma:
+
+\begin{lemm} \label{lemm-ineq-int}
+    Suppose $ p : \R^+ \rightarrow \R^+ $ is differentiable and strictly increasing, then for given $ x > 0 $, we have
+    $$ \int_0^{tx} p (\omega) d \omega < t \int_0^x p (\omega) d \omega $$
+    for all $ t \in (0, 1) $.
+\end{lemm}
+\begin{proof}
+    Define 
+    $$ y (t) := \int_0^{tx} p (\omega) d \omega - t \int_0^x p (\omega) d \omega $$
+    where $ t \in [0, 1] $. Obviously $ y (0) = y (1) = 0 $, and we have $ y^{\prime\prime}(t) = p^\prime(tx) \cdot x^2 $, which tells us $ y^{\prime\prime}(t) \ge 0 $ for $ t > 0 $ on $ [0, 1] $ since $ x > 0 $ and $ p $ is strictly increasing on $ \R^+ $. Therefore $ y(t) < 0 $ on $ (0, 1) $, the inequality holds.
+\end{proof}
+
+Now, choose arbitrary $ \boldsymbol{f}_1, \boldsymbol{f}_2 \in F $ such that $ \boldsymbol{f}_1 \neq \boldsymbol{f}_2 $, and let $ t \in (0, 1) $. With the help of Lemma \ref{lemm-ineq-int}, there is
+\begin{align}
+    z (t \boldsymbol{f}_1 + (1-t) \boldsymbol{f}_2) &= \sum_{a \in \cA} \int_0^{x_a (t \boldsymbol{f}_1 + (1-t) \boldsymbol{f}_2)} p_a (\omega) d \omega \\ 
+    &= \sum_{a \in \cA} \int_0^{t x_a (\boldsymbol{f}_1) + (1-t) x_a (\boldsymbol{f}_2)} p_a (\omega) d \omega \\
+    &= \sum_{a \in \cA} \int_0^{t x_a (\boldsymbol{f}_1)} p_a (\omega) d \omega + \sum_{a \in \cA} \int_0^{(1-t) x_a (\boldsymbol{f}_2)} p_a (\omega) d \omega \\
+    &<  t \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f}_1)} p_a (\omega) d \omega + (1 - t) \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f}_2)} p_a (\omega) d \omega \\ 
+    &= t z(\boldsymbol{f}_1) + (1 - t) z (\boldsymbol{f}_2)
+\end{align}
+Notice that we have stated that $ \boldsymbol{x} \ge 0 $.
+
+We have proved $ F $ is convex and $ z $ is strictly convex. Therefore, the Problem \ref{eq-opt-objective-func}-\ref{eq-opt-constraint-last} is convex optimization problem and it admits a unique minimizer.
+
+\subsection{Review on Constrained Problems}
+
+We have to refresh ourselves with an important result in constrained optimization problem. Consider
+\begin{align} \label{pb-obj-function}
+    \min_{x \in X \subset \R^n}~ f(x) & \\ 
+    \st~ h_i (x) &= 0 ~~~~ \forall i \in I := \{1, 2, \cdots, m\} \\
+    g_j (x) &\le 0 ~~~~ \forall j \in J := \{1, 2, \cdots, p\} \label{pb-last-constraint}
+\end{align}
+where $ m \le n $ and the functions $ f, h_i, g_j \in \cC^1(X) $ for all $ i \in I $ and for all $ j \in J $. 
+
+Before introducing the important results, we have to define:
+
+\begin{defi} [Regular Point \cite{luenberger2008linear}] 
+    Let $ x^* \in X $ be a point satisfying the constraints $ h_i (x^*) = 0 $ for all $ i \in I $ and $ g(x^*) \le 0 $ for all $ j \in J $. Moreover, denote $ J_a \subset J $ as the set of indices for which $ g_j (x^*) = 0 $, that is, active constraint. Then $ x^* $ is said to be a regular point if the gradient vectors $ \nabla h_i (x^*) $ and $ \nabla g_j (x^*) $, for all $ i \in I $ and for all $ j \in J_a $, are linearly independent.
+\end{defi}
+
+Then we have the following results:
+
+\begin{theo}[Karush-Kuhn-Tucker Conditions \cite{luenberger2008linear}] Let $ x^* $ be a local minimum point for the Problem \ref{pb-obj-function} - \ref{pb-last-constraint}, and suppose $ x^* $ is a regular point for the constraints. Then there is a vector $ \lambda \in \R^m $ and a vector $ \mu \in \R ^p $ with $ \mu \ge 0 $ such that
 \begin{align*}
-    \sum_{k \in \cK_{rs}} f_{k}^{rs} &= q_{rs} ~~~~ \forall r \in \cR ~~ \forall s \in \cS \\
-    x_a (\boldsymbol{f}) &= \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} f_{k}^{rs} \delta_{a, k}^{rs} ~~~~ \forall a \in \cA
+    \nabla f (x^*) + \sum_{i \in I} \lambda_i \nabla h_i (x^*) + \sum_{j \in J} \mu_j \nabla g_j (x^*) &= 0 \\ 
+    \mu_j g_j(x^*) &= 0 ~~~~ \forall j \in J
 \end{align*}
+\end{theo}
 
-This objective function does not have any intuitive economic or behavioral interpretation. It should be viewed strictly as a mathematical construct that is utilized to solve equilibrium problems. \cite{Shef85}
+\begin{theo} [KKT Conditions for Convex Optimization Problems] \label{theo-kkt-for-convex}
+    $ x^* \in X $ is an optimal solution if and only if $ x^* $ satisfies the KKT conditions.
+\end{theo}
 
-\section{Proof of Equivalence}
+Above introduced theorems will play vital role in the proof of equivalence between Problem \ref{prob-wardrop} and Problem \ref{prob-min-formulation} in the next section.
 
-[HELP WANTED]
+\subsection{Demonstration of Equivalence}
+
+At the beginning we need to do some computation. By Equality \ref{eq-path-flow-to-link-flow}, we can derive
+\begin{equation} \label{eq-derivative-x-f}
+    \frac{\partial x_a (\boldsymbol{f})}{\partial f^{rs}_k} = \delta^{rs}_{a, k} ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{equation}
+Thanks to Equality \ref{eq-derivative-x-f}, directly we get
+\begin{equation} \label{eq-derivative-z-f}
+    \frac{\partial z (\boldsymbol{f})}{\partial f_k^{rs}} = \sum_{a \in \cA} \left[ p_a \left(x_a (\boldsymbol{f})\right) \frac{\partial x_a (\boldsymbol{f})}{\partial f_k^{rs}} \right] = \sum_{a \in \cA} \left[ p_a \left(x_a (\boldsymbol{f})\right) \delta_{a, k}^{rs} \right] = c_k^{rs} (\boldsymbol{f}) ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{equation}
+
+Moreover, for the accordance, we transform the constraints in Problem \ref{eq-opt-objective-func}-\ref{eq-opt-constraint-last} as
+\begin{equation}
+    h_{rs} (\boldsymbol{f}) = \sum_{k \in \cK_{rs}} f_k^{rs} - q_{rs} = 0 ~~~~ \forall r \in \cR ~~ \forall s \in \cS 
+\end{equation}
+Similarly, 
+\begin{equation}
+    g^{rs}_k (\boldsymbol{f}) = - f_{rs}^k \le 0 ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{equation}
+
+Obviously, we have
+\begin{equation} \label{eq-derivative-h-f}
+    \frac{\partial h_{rs} (\boldsymbol{f})}{\partial f_{k}^{r's'}} = \1_{\{ r = r', ~s = s' \}} ~~~~ \forall r' \in \cR ~~ \forall s' \in \cS
+\end{equation}
+and
+\begin{equation} \label{eq-derivative-g-f}
+    \frac{\partial g_k^{rs} (\boldsymbol{f})}{\partial f_k^{rs}} = - \1_{\{r=r', ~s=s', ~k=k'\}} ~~~ \forall k' \in \cK_{r's'} ~~ \forall r' \in \cR ~~ \forall s' \in \cS
+\end{equation}
+in which $ \1_X (x) $ is indicator function: $ \1_X (x) = 1 $ if $ x \in X $, $ \1_X (x) = 0 $ if $ x \notin X $. Equalities \ref{eq-derivative-h-f} and \ref{eq-derivative-g-f} also tell us all $ f \in F $ are regular points.
+
+Now we suppose that $ \tilde{\boldsymbol{f}} $ is a global minimum, and we know it must exist. By Theorem \ref{theo-kkt-for-convex}, the global minimizer is characterized by the KKT conditions. Apply the KKT conditions to our Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last}, we know there exist $ \lambda_{rs} \in \R $ for all $ r \in \cR $, and for all $ s \in \cS $; and $ \mu^{rs}_k \in \R^+ $ for all $ k \in \cK_{rs} $, for all $ r \in \cR $, and for all $ s \in \cS $; such that 
+\begin{align}
+    &\nabla z (\tilde{\boldsymbol{f}}) + \sum_{r \in \cR} \sum_{s \in \cS} \lambda_{rs} \nabla h_{rs} (\tilde{\boldsymbol{f}}) + \sum_{r \in \cR} \sum_{s \in \cS} \sum_{k \in \cK_{rs}} \mu_k^{rs} \nabla g_k^{rs} (\tilde{\boldsymbol{f}}) = 0 \\ 
+    &\mu_k^{rs} g_k^{rs} (\tilde{\boldsymbol{f}}) = 0 ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{align}
+Combined with Equalities \ref{eq-derivative-z-f}, \ref{eq-derivative-h-f} and \ref{eq-derivative-g-f}, there are
+\begin{align}
+    c_k^{rs} (\tilde{\boldsymbol{f}}) &= - \lambda_{rs} + \mu_k^{rs} ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS \\ 
+    \mu_k^{rs} \tilde{\boldsymbol{f}}^{rs}_k &= 0 ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
+\end{align}
+which implies: for fixed $ r \in \cR $ and $ s \in \cS $, for $ k \in \cK_{rs} $ such that $ \tilde{\boldsymbol{f}}^{rs}_k \neq 0 $, there must be $ \mu_k^{rs} = 0 $, then $ \tilde{\boldsymbol{f}}^{rs}_k \equiv - \lambda_{rs} $; for $ k \in \cK_{rs} $ such that $ \tilde{\boldsymbol{f}}^{rs}_k = 0 $, since $ \mu_k^{rs} \ge 0 $, then $ \tilde{\boldsymbol{f}}^{rs}_k \ge - \lambda_{rs} $. Notice this is exactly the characterization of user equilibrium solution, thus we have complete the demonstration of equivalence between the Problem \ref{prob-wardrop} and Problem \ref{prob-min-formulation}.
+
+\section{Introduction to Frank-Wolfe Algorithm}
 
 \printbibliography
 
