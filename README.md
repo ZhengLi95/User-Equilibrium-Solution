@@ -2,11 +2,28 @@
 
 User equilibrium is a classical problem on the traffic flow assignment in the field of Transportation Engineering, its main idea is: Every driver cannot reduce his travel time by unilaterally change his travel route.
 
-## THEORY
+## THEORY OF USER EQUILIBRIUM SOLUTION
 
-Please read [User-Equilibrium-Solution.pdf](theory/user-equilibrium-solution.pdf). (This part will be finished in few weeks)
+Please refer to [User-Equilibrium-Solution.pdf](theory/user-equilibrium-solution.pdf). 
 
-## INSTRUCTIONS
+### Abstract
+
+We have given an equivalent formulation, which is a convex optimization problem, of finding user equilibrium solution in the traffic flow assignment, with proof of the equivalence. For the equivalent formulation, we have demonstrated the existence and uniqueness of minimizer. Moreover, the variant of Frank-Wolfe Algorithm is introduced for numerically solving the equivalent formulation.
+
+### Contents
+
++ Statement of Problem
+  + Decision Variables and Parameters
+  + Objective and Definition of User Equilibrium
++ Equivalent Mathematical Formulation
+  + Statement of Equivalent Formulation
+  + Existence of Minimizer
+  + Convexity of Equivalent Formulation
+  + Review on Constrained Problems
+  + Demonstration of Equivalence
++ Introduction to Frank-Wolfe Algorithm
+
+## INSTRUCTIONS OF PROGRAM
 
 All the things are done within 3 main procedures, implement them in `main.py`:
 

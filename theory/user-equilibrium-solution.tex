@@ -13,11 +13,13 @@
 
 \maketitle
 
-% \begin{abstract}
-%     Traffic flow assignment..
-% \end{abstract}
+\tableofcontents
 
-\section{Problem Statement}
+\begin{abstract}
+    We have given an equivalent formulation, which is a convex optimization problem, of finding user equilibrium solution in the traffic flow assignment, with proof of the equivalence. For the equivalent formulation, we have demonstrated the existence and uniqueness of minimizer. Moreover, the variant of Frank-Wolfe Algorithm is introduced for numerically solving the equivalent formulation.
+\end{abstract}
+
+\section{Statement of Problem}
 
 \subsection{Decision Variables and Parameters}
 
@@ -39,6 +41,13 @@ Associated with each link $ a \in \cA $, there is link performance function $ p_
     \item $ p \in \cC^1 (\R^+) $, i.e. $ f $ is continuously differentiable on $ \R^+ $.
     \item $ p $ is strictly increasing on $ \R^+ $.
 \end{enumerate}
+
+In applications, one may follow the suggestion of Federal Highway Administration to choose the link performance function as
+\begin{equation} \label{eq-sugg-link-perf-func}
+    p_a (x_a) = t_0 \left( 1 + \alpha \left( \frac{x_a}{c} \right)^\beta \right)
+\end{equation}
+where $ t_0 \in \R^+ $ is the free time of link, and $ c \in \R^+ $ is the capacity of link, and usually we set $ \alpha = 0.15 $ and $ \beta = 4 $. However, the concrete form of link performance function, like in Equality \ref{eq-sugg-link-perf-func}, will not enter our proofs.
+
 The traveling time on the path $ k \in \cK_{rs} $ is denoted as $ c_k^{rs} $, which can be written as: 
 \begin{equation} \label{eq-link-time-to-path-time}
     c_k^{rs} = \sum_a t_a \delta_{a, k}^{rs} ~~~~ \forall k \in \cK_{rs} ~~ \forall r \in \cR ~~ \forall s \in \cS
@@ -52,10 +61,10 @@ The definition of user equilibrium can be concisely expressed as \cite{Shef85}: 
 Meanwhile, Wardrop \cite{wardrop1952road} has provided an equivalent definition of user equilibrium, which is call \textit{Wardrop's First Principle}: For each O-D pair, at user equilibrium, the travel time on all used paths is equal, and (also) less than or equal to the travel time that would be experienced by a single vehicle on any unused path. Therefore, we can state our problem in the following way:
 
 \begin{prob} \label{prob-wardrop}
-    Given road network $ \{ \cN, \cE, \cR, \cS \} $, traffic demands $ (q_{rs})_{r \in \cR, s \in \cS} $ and link performance functions $ (p_a)_{a \in \cA} $. Determine all $ f_k^{rs} \in \R^+ $ such that the \textit{Wardrop First Principle} holds.
+    Given road network $ \{ \cN, \cA, \cR, \cS \} $, traffic demands $ (q_{rs})_{r \in \cR, s \in \cS} $ and link performance functions $ (p_a)_{a \in \cA} $. Determine all $ f_k^{rs} \in \R^+ $ such that the \textit{Wardrop First Principle} holds.
 \end{prob}
 
-In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $, by Equality \ref{eq-path-flow-to-link-flow} we can calculate flow on links $ \boldsymbol{x} := (x_a)_{a \in \cA} $. Then, using link performance functions $ (p_a)_{a \in \cA} $ we can obtain the traveling time of links $ (t_a)_{a \in \cA} $. According to Equality \ref{eq-link-time-to-path-time} we can compute the traveling time of paths $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $. As we said, the result $ \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $ must satisfies the \textit{Wardrop First Principle}, that is: for each fixed $ r \in \cR $ and $ s \in \cS $, there exists a constant $ c_{rs} \in \R^+ $ such that: $ c_k^{rs} \equiv c_{rs} $ for all $ k \in K_{rs} $ such that $ f_k^{rs} > 0 $; and $ c_k^{rs} \ge c_{rs} $ for all $ k \in \cK_{rs} $ such that $ f_k^{rs} = 0 $. 
+In other words, for determined flow on paths $ \boldsymbol{f} := \left( f_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $, by Equality \ref{eq-path-flow-to-link-flow} we can calculate flow on links $ \boldsymbol{x} := (x_a)_{a \in \cA} $. Then, using link performance functions $ (p_a)_{a \in \cA} $ we can obtain the traveling time of links $ \boldsymbol{t} := (t_a)_{a \in \cA} $. According to Equality \ref{eq-link-time-to-path-time} we can compute the traveling time of paths $ \boldsymbol{c} := \left( c_k^{rs} \right)_{k \in \cK^{rs}}^{r \in \cR, s \in \cS} $. As we said, the result $ \boldsymbol{c} $ must satisfies the \textit{Wardrop First Principle}, that is: for each fixed $ r \in \cR $ and $ s \in \cS $, there exists a constant $ c_{rs} \in \R^+ $ such that: $ c_k^{rs} \equiv c_{rs} $ for all $ k \in K_{rs} $ such that $ f_k^{rs} > 0 $; and $ c_k^{rs} \ge c_{rs} $ for all $ k \in \cK_{rs} $ such that $ f_k^{rs} = 0 $. 
 
 \section{Equivalent Mathematical Formulation}
 
@@ -78,18 +87,18 @@ We shall notice that the objective function does not have any intuitive interpre
 
 \subsection{Existence of Minimizer}
  
-Let us denote $ N := \sum_{r \in \cR} \sum_{s \in \cS} \abs{\cK_{rs}} $, $ M := \abs{\cE} $, and the the feasible set of Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last} as $ F \subset \R^N $, which exactly is
+Let us denote $ N := \sum_{r \in \cR} \sum_{s \in \cS} \abs{\cK_{rs}} $, $ M := \abs{\cA} $, and the the feasible set of Problem \ref{eq-opt-objective-func} - \ref{eq-opt-constraint-last} as $ F \subset \R^N $, which exactly is
 $$ F = \{ \boldsymbol{f} \in \R^N : \boldsymbol{f} \ge 0; \sum_{k \in \cK_{rs}} f_{k}^{rs} = q_{rs}, ~\forall r \in \cR, ~\forall s \in \cS \} $$
 Obviously $ F $ is a closed subset of $ \R^N $. 
 
-Moreover, notice that the linear (therefore continuous) map $ \boldsymbol{x} : F \subset \R^N \rightarrow \R^M $ can be represented as a matrix with binary entries, i.e. matrix contains only zero or one, but it cannot be zero matrix, otherwise it will be meaningless. This property tells us: the non-negativity of $ \boldsymbol{x} $ can be inherited from the non-negativity of $ \boldsymbol{f} $. We affirm the properties of $ z : \R^N \rightarrow \R $ as:
+Moreover, notice that the linear, therefore continuous, map $ \boldsymbol{x} : F \subset \R^N \rightarrow \R^M $ can be represented as a matrix with binary entries with respect to canonical bases in $ \R^N $ and $ \R^M $, i.e. matrix contains only 0 or 1; but it cannot be zero matrix, otherwise it will be meaningless. We shall call this property of $ \boldsymbol{x} $ as positivity, that is: $ \boldsymbol{x} (\boldsymbol{f}) > 0 $ for all $ \boldsymbol{f} > 0 $. Next, We affirm the properties of $ z : \R^N \rightarrow \R $ as:
 \begin{enumerate}
     \item $ z $ is coercive with respect to $ \boldsymbol{f} $. In fact, if $ \boldsymbol{f} \rightarrow +\infty $, then there exists $ a_0 \in \cA $ such that $ x_{a_0} (\boldsymbol{f}) \rightarrow + \infty $; by non-negativity, monotonicity and continuity of $ p_a $, 
     $$ z (\boldsymbol{f}) = \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f})} p_a (\omega) d \omega \ge \int_0^{x_{a_0} (\boldsymbol{f})} p_a (\omega) d \omega \rightarrow \infty $$ 
-    \item $ z \in \cC^0 (F) $, as the composition of continuous map $ \boldsymbol{x} \mapsto \sum_{a \in \cA} \int_0^{x_a} p_a (\omega) d \omega $ and linear map $ x_a $.
+    \item $ z \in \cC^0 (F) $, as the composition of continuous map $ \boldsymbol{x} \mapsto \sum_{a \in \cA} \int_0^{x_a} p_a (\omega) d \omega $ and linear map $ \boldsymbol{x} : F \subset \R^N \rightarrow \R^M $.
 \end{enumerate}
 
-The coercivity of $ z $ tells us the minimizer cannot appear at the infinity, then no matter where the minimizer is (if it exists), we can constrict it in a bounded and closed (since the feasible set is closed) set $ F_0 \subset F $; in other words, in a compact set $ F_0 $. The continuity of $ z $ implies the lower semi-continuity. 
+The coercivity of $ z $ tells us: if the minimizer exists, it cannot appear at the infinity, then no matter where it is, we can always constrict it in a bounded and closed (since the feasible set is closed) set $ F_0 \subset F $; in other words, as a result of Heine-Borel Theorem, in a compact set $ F_0 $. Moreover, The continuity of $ z $ implies the lower semi-continuity. 
 
 \begin{theo} [Weierstrass] \label{theo-weierstrass}
     Suppose $ F_0 \subset \R^N $ is a compact set, and $ z : F_0 \rightarrow \R $ is lower semi-continuous, then there exists $ \tilde{f} \in F_0 $ such that 
@@ -102,7 +111,7 @@ Theorem \ref{theo-weierstrass} shows the existence of minimizer of Problem \ref{
 
 Let us recall the definition of convex optimization problem:
 
-\begin{defi}[Convex optimization Problem]
+\begin{defi}[Convex optimization Problem] \label{def-convex-prob}
     A convex optimization problem is an optimization problem in which the objective function is a convex function and the feasible set is a convex set.
 \end{defi}
 
@@ -118,7 +127,7 @@ Observe that, choose arbitrary $ \boldsymbol{f}_1, \boldsymbol{f}_2 \in F $, the
 \begin{proof}
     Define 
     $$ y (t) := \int_0^{tx} p (\omega) d \omega - t \int_0^x p (\omega) d \omega $$
-    where $ t \in [0, 1] $. Obviously $ y (0) = y (1) = 0 $, and we have $ y^{\prime\prime}(t) = p^\prime(tx) \cdot x^2 $, which tells us $ y^{\prime\prime}(t) \ge 0 $ for $ t > 0 $ on $ [0, 1] $ since $ x > 0 $ and $ p $ is strictly increasing on $ \R^+ $. Therefore $ y(t) < 0 $ on $ (0, 1) $, the inequality holds.
+    where $ t \in [0, 1] $. Obviously $ y (0) = y (1) = 0 $, and we have $ y^{\prime\prime}(t) = p^\prime(tx) \cdot x^2 $, which tells us $ y^{\prime\prime}(t) > 0 $ for all $ t > 0 $ on $ [0, 1] $, since $ x > 0 $ and $ p $ is strictly increasing on $ \R^+ $. Therefore $ y(t) < 0 $ on $ (0, 1) $, the inequality holds.
 \end{proof}
 
 Now, choose arbitrary $ \boldsymbol{f}_1, \boldsymbol{f}_2 \in F $ such that $ \boldsymbol{f}_1 \neq \boldsymbol{f}_2 $, and let $ t \in (0, 1) $. With the help of Lemma \ref{lemm-ineq-int}, there is
@@ -129,7 +138,7 @@ Now, choose arbitrary $ \boldsymbol{f}_1, \boldsymbol{f}_2 \in F $ such that $ \
     &<  t \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f}_1)} p_a (\omega) d \omega + (1 - t) \sum_{a \in \cA} \int_0^{x_a (\boldsymbol{f}_2)} p_a (\omega) d \omega \\ 
     &= t z(\boldsymbol{f}_1) + (1 - t) z (\boldsymbol{f}_2)
 \end{align}
-Notice that we have stated that $ \boldsymbol{x} \ge 0 $.
+Notice that, $ \boldsymbol{f}_1 \neq \boldsymbol{f}_2 $ implies they cannot be zero at the same time, by positivity of $ \boldsymbol{x} $, Lemma \ref{lemm-ineq-int} can be properly applied.
 
 We have proved $ F $ is convex and $ z $ is strictly convex. Therefore, the Problem \ref{eq-opt-objective-func}-\ref{eq-opt-constraint-last} is convex optimization problem and it admits a unique minimizer.
 
@@ -159,7 +168,7 @@ Then we have the following results:
 \end{theo}
 
 \begin{theo} [KKT Conditions for Convex Optimization Problems] \label{theo-kkt-for-convex}
-    $ x^* \in X $ is an optimal solution if and only if $ x^* $ satisfies the KKT conditions.
+    When the optimization is convex, as in Definition \ref{def-convex-prob}, $ x^* \in X $ is an optimal solution if and only if $ x^* $ satisfies the KKT conditions.
 \end{theo}
 
 Above introduced theorems will play vital role in the proof of equivalence between Problem \ref{prob-wardrop} and Problem \ref{prob-min-formulation} in the next section.
@@ -186,11 +195,11 @@ Similarly,
 
 Obviously, we have
 \begin{equation} \label{eq-derivative-h-f}
-    \frac{\partial h_{rs} (\boldsymbol{f})}{\partial f_{k}^{r's'}} = \1_{\{ r = r', ~s = s' \}} ~~~~ \forall r' \in \cR ~~ \forall s' \in \cS
+    \frac{\partial h_{rs} (\boldsymbol{f})}{\partial f_{k'}^{r's'}} = \1_{\{ r = r', ~s = s' \}} ~~~~ \forall k' \in \cK_{r's'} ~~ \forall r' \in \cR ~~ \forall s' \in \cS
 \end{equation}
 and
 \begin{equation} \label{eq-derivative-g-f}
-    \frac{\partial g_k^{rs} (\boldsymbol{f})}{\partial f_k^{rs}} = - \1_{\{r=r', ~s=s', ~k=k'\}} ~~~ \forall k' \in \cK_{r's'} ~~ \forall r' \in \cR ~~ \forall s' \in \cS
+    \frac{\partial g_k^{rs} (\boldsymbol{f})}{\partial f_{k'}^{r's'}} = - \1_{\{r=r', ~s=s', ~k=k'\}} ~~~ \forall k' \in \cK_{r's'} ~~ \forall r' \in \cR ~~ \forall s' \in \cS
 \end{equation}
 in which $ \1_X (x) $ is indicator function: $ \1_X (x) = 1 $ if $ x \in X $, $ \1_X (x) = 0 $ if $ x \notin X $. Equalities \ref{eq-derivative-h-f} and \ref{eq-derivative-g-f} also tell us all $ f \in F $ are regular points.
 
@@ -207,6 +216,48 @@ Combined with Equalities \ref{eq-derivative-z-f}, \ref{eq-derivative-h-f} and \r
 which implies: for fixed $ r \in \cR $ and $ s \in \cS $, for $ k \in \cK_{rs} $ such that $ \tilde{\boldsymbol{f}}^{rs}_k \neq 0 $, there must be $ \mu_k^{rs} = 0 $, then $ \tilde{\boldsymbol{f}}^{rs}_k \equiv - \lambda_{rs} $; for $ k \in \cK_{rs} $ such that $ \tilde{\boldsymbol{f}}^{rs}_k = 0 $, since $ \mu_k^{rs} \ge 0 $, then $ \tilde{\boldsymbol{f}}^{rs}_k \ge - \lambda_{rs} $. Notice this is exactly the characterization of user equilibrium solution, thus we have complete the demonstration of equivalence between the Problem \ref{prob-wardrop} and Problem \ref{prob-min-formulation}.
 
 \section{Introduction to Frank-Wolfe Algorithm}
+
+The Frank–Wolfe Algorithm is an iterative first-order optimization algorithm for constrained convex optimization. Also known as the conditional gradient method, reduced gradient algorithm and the convex combination algorithm, the method was originally proposed by Marguerite Frank and Philip Wolfe in 1956. In each iteration, the Frank–Wolfe algorithm considers a linear approximation of the objective function, and moves towards a minimizer of this linear function. \cite{wiki:xxx}.
+
+Obviously, we need some modifications on original Frank–Wolfe Algorithm to make it adapted to our context, that is, the Problem \ref{eq-opt-objective-func}-\ref{eq-opt-constraint-last}. Therefore, we have the following variant of Frank–Wolfe Algorithm \cite{Shef85}:
+
+\begin{enumerate}[start=0, label={\bfseries Step \arabic*}]
+    
+    \item Initialization. Perform the so-called all-or-nothing assignment based on the zero link flow. All-or-nothing assignment means: given specific traveling time of links $ \boldsymbol{t} $, we can directly compute the traveling time of paths $ \boldsymbol{c} $. Then, for each traffic demand $ q_{rs} $, corresponding to its O-D pair, we assign all the demand to the path which least costs the traveling time. This yields $ \left(x^n_a\right)_{a \in \cA} $, notice the $ n $ at the exponential position means it is $ n $-th iteration.
+
+    \item Update. Set
+    \begin{equation*}
+        t^n_a = p_a(x^n_a) ~~~~ \forall a \in \cA 
+    \end{equation*}
+
+    \item Direction finding. Perform the all-or-nothing assignment based on $ \left(t^n_a\right)_{a \in \cA} $. This yields a set of auxiliary link flows $ \left(y^n_a\right)_{a \in \cA} $.
+
+    \item Line search. Find $ \theta \in [0, 1] $ that solves
+    \begin{equation*}
+        \min_{0 \le \theta \le 1} \tilde{z} (\theta) := \sum_{a \in \cA} \int^{x^n_a+\theta(y^n_a-x^n_a)}_0 p_a(\omega) d\omega
+    \end{equation*}
+    We can also observe that
+    \begin{equation*}
+        \tilde{z}^\prime(\theta) = \sum_{a \in \cA} p_a(x^n_a+\theta(y^n_a-x^n_a)) (y^n_a-x^n_a)
+    \end{equation*}
+    then
+    \begin{equation*}
+        \tilde{z}^{\prime\prime}(\theta) = \sum_a p^\prime_a(x^n_a+\theta(y^n_a-x^n_a)) (y^n_a-x^n_a)^2
+    \end{equation*}
+    As we mentioned before, the function $ p_a $ is strictly increasing, thus we know $ \tilde{z}^{\prime\prime}(\theta) \ge 0 $ for all $ \theta \in [0, 1] $. Then, some numerical methods can be used to solve this sub-problem, since it is with good property.
+
+    \item Move. Set
+    \begin{equation*}
+        x^{n+1}_a = x^n_a + \theta(y^n_a-x^n_a) ~~~~ \forall a \in \cA
+    \end{equation*}
+
+    \item Convergence test. If a convergence criterion is met, stop, the current solution is the set of equilibrium link flows; otherwise, go to back to the first step. One may choose the convergence criterion as
+    \begin{equation*}
+        \frac{\norm{x^{n+1}-x^n}_{\R^M}}{\norm{x^n}_{\R^M}} < \epsilon
+    \end{equation*}
+    for some given small $ \epsilon > 0 $.
+
+\end{enumerate}
 
 \printbibliography
 
