@@ -4,7 +4,7 @@ User equilibrium is a classical problem on the traffic flow assignment in the fi
 
 ## THEORY OF USER EQUILIBRIUM SOLUTION
 
-Please refer to [User-Equilibrium-Solution.pdf](theory/user-equilibrium-solution.pdf). 
+Please refer to [User-Equilibrium-Solution.pdf](static/user-equilibrium-solution.pdf). 
 
 ### Abstract
 
