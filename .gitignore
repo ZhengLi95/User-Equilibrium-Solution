@@ -114,5 +114,6 @@ output.xls
 
 
 # Latex
-theory/*
+static/*
+!NETWORK.png
 !user-equilibrium-solution.pdf
