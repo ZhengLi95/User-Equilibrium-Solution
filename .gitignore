@@ -115,6 +115,4 @@ output.xls
 
 # Latex
 theory/*
-!Biblio.bib
 !user-equilibrium-solution.pdf
-!*/*.tex
