@@ -52,7 +52,7 @@ Then you can just run `$ python main.py`.
 
 ## SAMPLE
 
-This well-designed sample was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/)
+This sample was provided by Prof. [F. Xiao](https://scholar.google.com/citations?user=prn-uaQAAAAJ) within his lectures at [Southwest Jiaotong University](https://english.swjtu.edu.cn/), and you can find all the data of this toy sample in `data.py`.
 
 ### Graph display
 
