@@ -106,16 +106,17 @@ class TrafficFlowModel:
         ''' According to the link flow we obtained in `solve`,
             generate a tuple which contains four elements:
             `link flow`, `link travel time`, `path travel time` and
-            `link vehicle capacity ratio`. This function is exposed
-            to users in case they need do some extensions based on
-            the computation result.
+            `path flow`, `link vehicle capacity ratio`. 
+            This function is exposed to users in case they need to
+            do some extensions based on the computation result.
         '''
         if self.__solved:
             link_flow = self.__final_link_flow
             link_time = self.__link_flow_to_link_time(link_flow)
             path_time = self.__link_time_to_path_time(link_time)
+            path_flow = self.__link_flow_to_path_flow(link_flow)
             link_vc = link_flow / self.__link_capacity
-            return link_flow, link_time, path_time, link_vc
+            return link_flow, link_time, path_time, path_flow, link_vc
         else:
             return None
 
@@ -131,7 +132,7 @@ class TrafficFlowModel:
             # Print the report
             
             # Do the computation
-            link_flow, link_time, path_time, link_vc = self._formatted_solution()
+            link_flow, link_time, path_time, path_flow, link_vc = self._formatted_solution()
 
             print(self.__dash_line())
             print("TRAFFIC FLOW ASSIGN MODEL (USER EQUILIBRIUM) \nFRANK-WOLFE ALGORITHM - REPORT OF SOLUTION")
@@ -143,12 +144,12 @@ class TrafficFlowModel:
             print("PERFORMANCE OF LINKS")
             print(self.__dash_line())
             for i in range(self.__network.num_of_links()):
-                print("%2d : link= %12s, flow= %8.2f, time= %6.2f, v/c= %.3f" % (i, self.__network.edges()[i], link_flow[i], link_time[i], link_vc[i]))
+                print("%2d : link= %12s, flow= %8.2f, time= %8.2f, v/c= %.3f" % (i, self.__network.edges()[i], link_flow[i], link_time[i], link_vc[i]))
             print(self.__dash_line())
             print("PERFORMANCE OF PATHS (GROUP BY ORIGIN-DESTINATION PAIR)")
             print(self.__dash_line())
             for i in range(self.__network.num_of_paths()):
-                print("%2d : group= %2d, time= %6.2f, path= %s" % (i, self.__network.paths_category()[i], path_time[i], self.__network.paths()[i]))
+                print("%2d : group= %2d, flow= %8.2f, time= %8.2f, path= %s" % (i, self.__network.paths_category()[i], path_flow[i], path_time[i], self.__network.paths()[i]))
         else:
             raise ValueError("The report could be generated only after the model is solved!")
 
@@ -221,6 +222,12 @@ class TrafficFlowModel:
         '''
         link_flow = self.__network.LP_matrix().dot(path_flow)
         return link_flow
+
+    def __link_flow_to_path_flow(self, link_flow):
+        ''' Only used in the final evaluation, not the recursive structure
+        '''
+        path_flow = link_flow.dot(self.__network.LP_matrix())
+        return path_flow
 
     def __link_time_performance(self, link_flow, t0, capacity):
         ''' Performance function, which indicates the relationship
