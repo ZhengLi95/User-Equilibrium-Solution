@@ -46,9 +46,10 @@ Then you can just run `$ python main.py`.
 1. Parameters in the link performance function such as `TrafficFlowModel._alpha` and `TrafficFlowModel._beta` are directly exposed to users, one can revise them if necessary.
 2. Notice the mutual correspondence between the input data while writing them into the `data.py`.
 3. When the program doesn't go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
-4. In the file `main.py`, all the common methods of `TrafficFlowModel` class are given in advance, which are guidelines for the user, and all functions in the repository are more or less with illustrations.
-5. This program is not numerical stable when it encounters big road network.
-6. If you have trouble with implementing of model, or find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com).
+4. In the file `main.py`, all the most-used methods of `TrafficFlowModel` class are given, which are guidelines for the user; and all functions in the repository are more or less with illustrations.
+5. It happens that the travelling time of paths in each group are not approximately equal (Thanks to @Sword-holder and his team members for pointing out this phenomenon), since some paths have zero flow. However, in general the number of paths is greater than that of links, which implies the linear map between `link_flow` and `path_flow` cannot be neither surjective nor injective, so we cannot mathematically obtain the `path_flow` from the `link_flow` (no solution, or by Fredholm Alternative infinitely many solution), and need to manually analyze if the solution is of user equilibrium.
+6. This program might not be numerical stable when it encounters big road network.
+7. If you have trouble with implementing of model, or find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com).
 
 ## SAMPLE
 
