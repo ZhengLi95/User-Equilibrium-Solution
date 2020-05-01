@@ -267,6 +267,13 @@ class TrafficNetwork(Graph):
         '''
         return self.__LP_matrix
 
+    def LP_matrix_rank(self):
+        ''' Return the rank of Link-Path matrix
+            of current traffic network
+        '''
+        import numpy as np
+        return np.linalg.matrix_rank(self.__LP_matrix)
+
     def OD_pairs(self):
         """ Return the origin-destination pairs of
             current traffic network

@@ -364,7 +364,7 @@ class TrafficFlowModel:
             string += "%2d : Conjugated OD pair= %s, Path= %s \n" % (i, self.__network.paths_category()[i], self.__network.paths()[i])
         string += self.__dash_line()
         string += "\n"
-        string += "Link - Path Incidence Matrix:\n"
+        string += f"Link-Path Incidence Matrix (Rank: {self.__network.LP_matrix_rank()}):\n"
         string += self.__dash_line()
         string += "\n"
         string += str(self.__network.LP_matrix())
