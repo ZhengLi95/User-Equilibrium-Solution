@@ -87,7 +87,7 @@ This sample was provided by Prof. [F. Xiao](https://scholar.google.com/citations
 
 | DEMAND | 15   |  17  |
 | ------ | :--- | :--: |
-| 5      | 6000 | 7500 |
+| 5      | 6000 | 6750 |
 | 6      | 7500 | 5250 |
 
 ### Report of solution (printed in console)
