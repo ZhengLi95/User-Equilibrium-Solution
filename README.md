@@ -8,7 +8,7 @@ Please refer to [User-Equilibrium-Solution.pdf](static/user-equilibrium-solution
 
 ### Abstract
 
-We have given an equivalent formulation, which is a convex optimization problem, of finding user equilibrium solution in the traffic flow assignment, with proof of the equivalence. For the equivalent formulation, we have demonstrated the existence and uniqueness of minimizer. Moreover, the variant of Frank-Wolfe Algorithm is introduced for numerically solving the equivalent formulation.
+An equivalent formulation, which is a convex optimization problem, of finding user equilibrium solution in the traffic flow assignment, is given with a rigorous proof. For the equivalent formulation, we have demonstrated the existence and uniqueness of the minimizer. Moreover, a variant of Frank-Wolfe Algorithm is introduced for numerically solving the equivalent formulation.
 
 ### Contents
 
@@ -41,15 +41,14 @@ Invoke `TrafficFlowModel.report`.
 
 Then you can just run `$ python main.py`.
 
-## TIPS
+## COMMENTS
 
-1. Parameters in the link performance function such as `TrafficFlowModel._alpha` and `TrafficFlowModel._beta` are directly exposed to users, one can revise them if necessary.
-2. Notice the mutual correspondence between the input data while writing them into the `data.py`.
-3. When the program doesn't go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
-4. In the file `main.py`, all the most-used methods of `TrafficFlowModel` class are given, which are guidelines for the user; and all functions in the repository are more or less with illustrations.
-5. It happens that the travelling time of paths in each group are not approximately equal (Thanks to [@Sword-holder](https://github.com/Sword-holder) and his team members for pointing out this phenomenon), since some paths have zero flow. However, in general the number of paths is greater than that of links, which implies the linear mapping from `path_flow` to `link_flow` cannot be injective, so we cannot mathematically obtain the `path_flow` from the `link_flow`, since the inverse mapping does not exist. But this does not influence the existence of unique optimal `path_flow`, the optimal `link_flow` obtained by Frank-Wolfe algorithm is the image of optimal `path_flow` under aforementioned linear mapping.
-6. This program might not be numerical stable when it encounters big road network.
-7. If you have trouble with implementing of model, or find some bugs, please contact [me](mailto:zheng.andrea.li@gmail.com).
+1. The network should be one-directional, and it cannot contain any loop. A node cannot be an origin and a destination at the same time.
+2. Be careful to the 1-to-1 correspondence between the input data while writing them into the `data.py`.
+3. When the program does not go well, please firstly use `TrafficFlowModel.__str__` (which is already contained in `TrafficFlowModel.report`) to print all the current parameters for ensuring all the data having been introduced into model correctly.
+4. In the file `main.py`, all the most-used methods of `TrafficFlowModel` class are listed, which are the guideline for users; and all functions in the repository are more or less with comments.
+5. It happens that the travelling time of paths in each group are not approximately equal (Thanks to [@Sword-holder](https://github.com/Sword-holder) and his team members for pointing out this phenomenon), since some paths have zero flow. However, in general the number of paths is greater than that of links, which implies the linear mapping from `path_flow` to `link_flow` cannot be injective, so we cannot mathematically obtain the `path_flow` from the `link_flow`, because the inverse mapping does not exist. However, this does not influence the existence of unique optimal `path_flow`, the optimal `link_flow` obtained by Frank-Wolfe algorithm is the image of optimal `path_flow` under aforementioned linear mapping.
+6. Parameters in the link performance function such as `TrafficFlowModel._alpha` and `TrafficFlowModel._beta` are directly exposed to users, one can revise them if necessary.
 
 ## SAMPLE
 
